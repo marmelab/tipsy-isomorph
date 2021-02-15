@@ -1,4 +1,4 @@
-import CONSTANTS from "../../../const";
+import CONSTANTS from "../../const";
 
 const gameApi = {
     tilt: (direction, playerName, gameId) => {
