@@ -1,11 +1,11 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Text, View, StyleSheet } from "react-native-web";
 import PropTypes from "prop-types";
 
 const GameStatus = ({ game }) => {
-    const currentPlayerColor = useMemo(() => {
+    const currentPlayerColor = () => {
         return game.players.find((player) => player.current).color;
-    }, [game.players]);
+    };
     const getColorStyle = () => {
         switch (currentPlayerColor) {
             case "blue":
