@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native-web";
 
 import GameStatus from "../../lib/game/GameStatus.jsx";
-import gameApi from "../../lib/game/api/GameApi.jsx";
+import gameApi from "../../lib/game/GameApi.jsx";
 import Cell from "../../lib/game/Cell.jsx";
 import PropTypes from "prop-types";
 

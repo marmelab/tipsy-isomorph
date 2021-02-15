@@ -5,7 +5,7 @@ import Game from "./tipsy/game.jsx";
 export default function App() {
     return (
         <View style={styles.container}>
-            <Game></Game>
+            <Game />
         </View>
     );
 }
