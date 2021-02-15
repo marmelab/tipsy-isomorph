@@ -1,0 +1,11 @@
+version: "3.3"
+
+services:
+    tipsy-isomorph:
+        image: node:alpine
+        volumes:
+            - ./:/tipsy
+        command: yarn start
+        working_dir: /tipsy
+        ports:
+            - 3000:3000
