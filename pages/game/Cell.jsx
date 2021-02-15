@@ -3,34 +3,8 @@ import { View, StyleSheet } from "react-native-web";
 import Puck from "./Puck.jsx";
 import PropTypes from "prop-types";
 const Cell = ({ game, x, y, cellType }) => {
-    const getCellType = (cellType) => {
-        switch (cellType) {
-            case "exit":
-                return styles.exit;
-            case "cell":
-                return styles.cell;
-            case "obstacle":
-                return styles.obstacle;
-            case "topleft":
-                return styles.topleft;
-            case "top":
-                return styles.top;
-            case "topright":
-                return styles.topright;
-            case "right":
-                return styles.right;
-            case "bottomright":
-                return styles.bottomright;
-            case "bottom":
-                return styles.bottom;
-            case "bottomleft":
-                return styles.bottomleft;
-            case "left":
-                return styles.left;
-        }
-    };
     return (
-        <View key={"cell" + x + y} style={getCellType(cellType)}>
+        <View key={"cell" + x + y} style={styles[cellType]}>
             <Puck x={x} y={y} pucks={game.pucks}></Puck>
         </View>
     );
