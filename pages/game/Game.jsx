@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native-web";
 import GameStatus from "./GameStatus.jsx";
 import PropTypes from "prop-types";
@@ -23,10 +23,30 @@ const boardObstacles = [
     ],
 ];
 
-const Game = ({ playerName, game, updateGame }) => {
+const Game = () => {
     const [error, setError] = useState();
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
+    const [game, setGame] = useState({});
+    const [gameState, setGameState] = useState("pending");
+
+    useEffect(() => {
+        if (gameState != "pending") {
+            return;
+        }
+        setGameState("loading");
+        gameApi
+            .newGame("Brice")
+            .then((data) => {
+                return gameApi.joinGame("Maxime", data.id);
+            })
+            .then((data) => {
+                setGame(data);
+            })
+            .finally(() => {
+                setGameState("loaded");
+            });
+    }, [setGameState, setGame, gameState]);
 
     const replace = useCallback(() => {
         if (replaceState === "loading") {
@@ -38,14 +58,16 @@ const Game = ({ playerName, game, updateGame }) => {
             .catch((error) => {
                 setError(error);
             })
+            .then((data) => {
+                setGame(data);
+            })
             .finally(() => {
-                updateGame();
                 setReplaceState("pending");
             });
-    }, [replaceState, setReplaceState, game.id, error, setError]);
+    }, [replaceState, setReplaceState, game.id, error, setError, setGame]);
 
     const tilt = useCallback(
-        (direction) => {
+        (direction, playerName) => {
             if (tiltState === "loading") {
                 return;
             }
@@ -55,18 +77,27 @@ const Game = ({ playerName, game, updateGame }) => {
                 .catch((error) => {
                     setError(error);
                 })
+                .then((data) => {
+                    setGame(data);
+                })
                 .finally(() => {
-                    updateGame();
                     setTiltState("pending");
                 });
         },
-        [tiltState, game.id, playerName, error, setTiltState, setError]
+        [tiltState, game.id, error, setTiltState, setError]
     );
 
     if (error) {
         return (
             <View>
                 <Text>{error.message}</Text>
+            </View>
+        );
+    }
+    if (gameState != "loaded") {
+        return (
+            <View style={styles.loading}>
+                <Text>Loading</Text>
             </View>
         );
     }
@@ -82,27 +113,24 @@ const Game = ({ playerName, game, updateGame }) => {
                 },
             ]}
         >
-            <GameStatus game={game} playerName={playerName}></GameStatus>
+            <GameStatus game={game}></GameStatus>
             <View style={styles.game}>
-                {game.currentPlayer == playerName && game.remainingTurns > 0 ? (
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => tilt("west", game.currentPlayer)}
+                >
+                    <View style={styles.leftArrow}>
+                        <Text>◄</Text>
+                    </View>
+                </TouchableOpacity>
+                <View style={styles.board}>
                     <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => tilt("west")}
+                        onPress={() => tilt("north", game.currentPlayer)}
                     >
-                        <View style={styles.leftArrow}>
-                            <Text>◄</Text>
+                        <View style={styles.upArrow}>
+                            <Text>▲</Text>
                         </View>
                     </TouchableOpacity>
-                ) : null}
-                <View style={styles.board}>
-                    {game.currentPlayer == playerName &&
-                    game.remainingTurns > 0 ? (
-                        <TouchableOpacity onPress={() => tilt("north")}>
-                            <View style={styles.upArrow}>
-                                <Text>▲</Text>
-                            </View>
-                        </TouchableOpacity>
-                    ) : null}
                     {boardObstacles.map((row, y) => {
                         return (
                             <View key={"row" + y} style={styles.row}>
@@ -120,29 +148,24 @@ const Game = ({ playerName, game, updateGame }) => {
                             </View>
                         );
                     })}
-                    {game.currentPlayer == playerName &&
-                    game.remainingTurns > 0 ? (
-                        <TouchableOpacity
-                            style={styles.button}
-                            onPress={() => tilt("south")}
-                        >
-                            <View style={styles.downArrow}>
-                                <Text>▼</Text>
-                            </View>
-                        </TouchableOpacity>
-                    ) : null}
-                </View>
-
-                {game.currentPlayer == playerName && game.remainingTurns > 0 ? (
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => tilt("east")}
+                        onPress={() => tilt("south", game.currentPlayer)}
                     >
-                        <View style={styles.rightArrow}>
-                            <Text>►</Text>
+                        <View style={styles.downArrow}>
+                            <Text>▼</Text>
                         </View>
                     </TouchableOpacity>
-                ) : null}
+                </View>
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => tilt("east", game.currentPlayer)}
+                >
+                    <View style={styles.rightArrow}>
+                        <Text>►</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
             {game.remainingTurns == 0 &&
             (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
@@ -201,11 +224,5 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 });
-
-Game.propTypes = {
-    updateGame: PropTypes.func.isRequired,
-    game: PropTypes.object.isRequired,
-    playerName: PropTypes.string.isRequired,
-};
 
 export default Game;

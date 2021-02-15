@@ -12,12 +12,13 @@ const gameApi = {
         return fetch(
             `${CONSTANTS.BASE_URL}/game/${gameId}/tilt`,
             requestOptions
-        ).then((res) => {
+        ).then(async (res) => {
             if (!res.ok) {
                 return Promise.reject(
                     new Error(`error on requesting /game/${gameId}/tilt`)
                 );
             }
+            return await res.json();
         });
     },
     replace: (gameId) => {
@@ -36,6 +37,7 @@ const gameApi = {
                     new Error(`error on requesting /game/${gameId}/replace`)
                 );
             }
+            return await res.json();
         });
     },
     newGame: (playerName, withBot) => {

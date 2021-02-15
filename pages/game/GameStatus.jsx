@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Text, View, StyleSheet } from "react-native-web";
 import PropTypes from "prop-types";
 
-const GameStatus = ({ game, playerName }) => {
+const GameStatus = ({ game }) => {
     const currentPlayerColor = useMemo(() => {
         return game.players.find((player) => player.current).color;
     }, [game.players]);
@@ -17,9 +17,7 @@ const GameStatus = ({ game, playerName }) => {
     return (
         <View style={styles.container}>
             <Text style={[styles.text, getColorStyle()]}>
-                {playerName == game.currentPlayer
-                    ? "Your turn!"
-                    : game.currentPlayer + " turn!"}
+                {`${game.currentPlayer} turn!`}
             </Text>
             <Text style={[styles.text, getColorStyle()]}>
                 {game.remainingTurns}
@@ -29,7 +27,6 @@ const GameStatus = ({ game, playerName }) => {
 };
 GameStatus.propTypes = {
     game: PropTypes.object.isRequired,
-    playerName: PropTypes.string.isRequired,
 };
 const styles = StyleSheet.create({
     container: {
