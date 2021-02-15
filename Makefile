@@ -12,6 +12,10 @@ install:
 start:
 	@echo "Start the project"
 	docker-compose up --force-recreate -d
+	
+test:
+	@echo "Launch the tests"
+	docker-compose run --rm tipsy-isomorph yarn test
 
 dev:
 	@echo "Dev mode"
