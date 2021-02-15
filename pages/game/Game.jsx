@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native-web";
 import GameStatus from "./GameStatus.jsx";
-import PropTypes from "prop-types";
 import gameApi from "../api/GameApi.jsx";
 import Cell from "./Cell.jsx";
+import PropTypes from "prop-types";
 
 const boardObstacles = [
     ["topleft", "exit", "top", "top", "top", "top", "topright"],
@@ -23,12 +23,12 @@ const boardObstacles = [
     ],
 ];
 
-const Game = () => {
+const Game = ({ currentGame }) => {
     const [error, setError] = useState();
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
-    const [game, setGame] = useState({});
-    const [gameState, setGameState] = useState("pending");
+    const [game, setGame] = useState(currentGame);
+    const [gameState, setGameState] = useState(game ? "loaded" : "pending");
 
     useEffect(() => {
         if (gameState != "pending") {
@@ -179,6 +179,17 @@ const Game = () => {
         </View>
     );
 };
+
+Game.propTypes = {
+    currentGame: PropTypes.object,
+};
+
+export async function getServerSideProps() {
+    let game = await gameApi.newGame("Brice");
+    game = await gameApi.joinGame("Maxime", game.id);
+
+    return { props: { currentGame: game } };
+}
 
 const styles = StyleSheet.create({
     row: {
