@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native-web";
 
 import GameStatus from "../../lib/game/GameStatus.jsx";
 import gameApi from "../../lib/game/GameApi.jsx";
+import defaultGame from "../../lib/game/default-game.json";
 import Cell from "../../lib/game/Cell.jsx";
 import PropTypes from "prop-types";
 
@@ -28,8 +29,8 @@ const Game = ({ currentGame }) => {
     const [error, setError] = useState();
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
-    const [game, setGame] = useState(currentGame);
-    const [gameState, setGameState] = useState(game ? "loaded" : "pending");
+    const [game, setGame] = useState(currentGame ? currentGame : defaultGame);
+    const [gameState, setGameState] = useState("pending");
 
     useEffect(() => {
         if (gameState != "pending") {
