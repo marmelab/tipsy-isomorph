@@ -30,10 +30,17 @@ const Game = ({ currentGame }) => {
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
     const [game, setGame] = useState(currentGame ? currentGame : defaultGame);
-    const [gameState, setGameState] = useState("pending");
+    const [gameState, setGameState] = useState(
+        currentGame ? "loaded" : "pending"
+    );
 
     useEffect(() => {
+        if (!process.browser) {
+            console.log("not in browser");
+            return;
+        }
         if (gameState != "pending") {
+            console.log("Not pending");
             return;
         }
         setGameState("loading");
