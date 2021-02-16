@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native-web";
 import PropTypes from "prop-types";
 
-const AdaptiveButton = ({ action, noJsFallBack, style, children }) => {
+const AdaptiveButton = ({ action, noJsFallBack, style = {}, children }) => {
     const [jsOnlyStyle, setJsOnlyStyle] = useState({ display: "none" });
 
     useEffect(() => {
