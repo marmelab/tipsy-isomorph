@@ -3,9 +3,8 @@ import { Text, View, StyleSheet } from "react-native-web";
 
 import GameStatus from "../../lib/game/GameStatus.jsx";
 import gameApi from "../../lib/game/GameApi.js";
-import { useRouter } from "next/router";
 import Cell from "../../lib/game/Cell.jsx";
-import AdaptiveButton from "../../lib/game/AdaptiveButton.jsx";
+import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
 import isGameFull from "../../lib/shared/tools";
 import Waiting from "../../lib/game/Waiting.jsx";
 import PropTypes from "prop-types";
@@ -97,7 +96,7 @@ const Game = ({ currentGame, playerName, host }) => {
         );
     }
     if (!isGameFull(game)) {
-        return <Waiting game={game}></Waiting>;
+        return <Waiting game={game} host={host}></Waiting>;
     }
 
     return (
