@@ -8,7 +8,7 @@ import Cell from "../../lib/game/Cell.jsx";
 import PropTypes from "prop-types";
 
 const boardObstacles = [
-    ["topleft", "exit", "top", "top", "top", "top", "topright"],
+    ["topleft", "exit", "top", "obstacle", "top", "top", "topright"],
     ["left", "obstacle", "cell", "cell", "cell", "obstacle", "exit"],
     ["left", "cell", "obstacle", "cell", "obstacle", "cell", "right"],
     ["obstacle", "cell", "cell", "cell", "cell", "cell", "obstacle"],
@@ -37,11 +37,9 @@ const Game = ({ currentGame }) => {
 
     useEffect(() => {
         if (!process.browser) {
-            console.log("not in browser");
             return;
         }
         if (gameState != "pending") {
-            console.log("Not pending");
             return;
         }
 
@@ -60,8 +58,10 @@ const Game = ({ currentGame }) => {
     }, [setGameState, setGame, gameState]);
 
     useEffect(() => {
-        setJsOnlyStyle({});
-    });
+        if (jsOnlyStyle.display) {
+            setJsOnlyStyle({});
+        }
+    }, [jsOnlyStyle, setJsOnlyStyle]);
 
     const replace = useCallback(() => {
         if (replaceState === "loading") {
@@ -136,7 +136,11 @@ const Game = ({ currentGame }) => {
                 >
                     <View style={styles.leftArrow}>
                         <noscript>
-                            <a href="http://test.com">◄</a>
+                            <a
+                                href={`/tipsy/game?id=${game.id}&action=tilt&direction=west`}
+                            >
+                                ◄
+                            </a>
                         </noscript>
                         <Text style={jsOnlyStyle}>◄</Text>
                     </View>
@@ -147,7 +151,11 @@ const Game = ({ currentGame }) => {
                     >
                         <View style={styles.upArrow}>
                             <noscript>
-                                <a href="http://test.com">▲</a>
+                                <a
+                                    href={`/tipsy/game?id=${game.id}&action=tilt&direction=north`}
+                                >
+                                    ▲
+                                </a>
                             </noscript>
                             <Text style={jsOnlyStyle}>▲</Text>
                         </View>
@@ -175,7 +183,11 @@ const Game = ({ currentGame }) => {
                     >
                         <View style={styles.downArrow}>
                             <noscript>
-                                <a href="http://test.com">▼</a>
+                                <a
+                                    href={`/tipsy/game?id=${game.id}&action=tilt&direction=south`}
+                                >
+                                    ▼
+                                </a>
                             </noscript>
                             <Text style={jsOnlyStyle}>▼</Text>
                         </View>
@@ -188,7 +200,11 @@ const Game = ({ currentGame }) => {
                 >
                     <View style={styles.rightArrow}>
                         <noscript>
-                            <a href="http://test.com">►</a>
+                            <a
+                                href={`/tipsy/game?id=${game.id}&action=tilt&direction=east`}
+                            >
+                                ►
+                            </a>
                         </noscript>
                         <Text style={jsOnlyStyle}>►</Text>
                     </View>
@@ -211,10 +227,31 @@ Game.propTypes = {
     currentGame: PropTypes.object,
 };
 
-export async function getServerSideProps() {
-    let game = await gameApi.newGame("Brice");
-    game = await gameApi.joinGame("Maxime", game.id);
+export async function getServerSideProps({ query, res }) {
+    const { id, action, direction } = query;
+    console.log(`${id} ${action} ${direction}`);
+    let game;
+    switch (action) {
+        case "tilt":
+            game = await gameApi.getGame(id);
+            game = await gameApi.tilt(direction, game.currentPlayer, game.id);
+            break;
+        case "replace":
+            break;
+        default:
+            if (id) {
+                game = await gameApi.getGame(id);
+            } else {
+                game = await gameApi.newGame("Brice");
+                game = await gameApi.joinGame("Maxime", game.id);
+                res.writeHead(302, { Location: `/tipsy/game?id=${game.id}` });
+                res.end();
+                return;
+            }
+            break;
+    }
 
+    console.dir(game);
     return { props: { currentGame: game } };
 }
 
