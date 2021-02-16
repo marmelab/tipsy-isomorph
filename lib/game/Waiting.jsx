@@ -14,8 +14,7 @@ const Waiting = ({ playerName }) => {
 };
 
 Waiting.propTypes = {
-    playerName: PropTypes.string.isRequired,
-    gameId: PropTypes.number.isRequired,
+    playerName: PropTypes.string,
 };
 
 const styles = StyleSheet.create({

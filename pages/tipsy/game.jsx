@@ -6,6 +6,8 @@ import gameApi from "../../lib/game/GameApi.jsx";
 import defaultGame from "../../lib/game/default-game.json";
 import Cell from "../../lib/game/Cell.jsx";
 import AdaptiveButton from "../../lib/game/AdaptiveButton.jsx";
+import isGameFull from "../../lib/shared/tools";
+import Waiting from "../../lib/game/Waiting.jsx";
 import PropTypes from "prop-types";
 
 const boardObstacles = [
@@ -26,7 +28,7 @@ const boardObstacles = [
     ],
 ];
 
-const Game = ({ currentGame }) => {
+const Game = ({ currentGame, playerName }) => {
     const [error, setError] = useState();
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
@@ -117,6 +119,9 @@ const Game = ({ currentGame }) => {
             </View>
         );
     }
+    if (!isGameFull(game)) {
+        return <Waiting></Waiting>;
+    }
 
     return (
         <View
@@ -195,10 +200,11 @@ const Game = ({ currentGame }) => {
 
 Game.propTypes = {
     currentGame: PropTypes.object,
+    playerName: PropTypes.string.isRequired,
 };
 
 export async function getServerSideProps({ query, res }) {
-    const { id, action, direction } = query;
+    const { id, action, direction, playerName } = query;
     let game;
     switch (action) {
         case "tilt":
@@ -212,16 +218,17 @@ export async function getServerSideProps({ query, res }) {
             if (id) {
                 game = await gameApi.getGame(id);
             } else {
-                game = await gameApi.newGame("Brice");
-                game = await gameApi.joinGame("Maxime", game.id);
-                res.writeHead(302, { Location: `/tipsy/game?id=${game.id}` });
+                game = await gameApi.newGame(playerName);
+                res.writeHead(302, {
+                    Location: `/tipsy/game?id=${game.id}&playerName=${playerName}`,
+                });
                 res.end();
                 return;
             }
             break;
     }
 
-    return { props: { currentGame: game } };
+    return { props: { currentGame: game, playerName } };
 }
 
 const styles = StyleSheet.create({

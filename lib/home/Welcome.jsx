@@ -10,7 +10,7 @@ const Welcome = ({ playerName }) => {
     const router = useRouter();
     const handleNewGame = () => {
         setCreatingGame(true);
-        router.push(`/tipsy/game?playerOne=${playerName}`);
+        router.push(`/tipsy/game?playerName=${playerName}`);
     };
     if (creatingGame) {
         return (
@@ -23,7 +23,7 @@ const Welcome = ({ playerName }) => {
         <View style={styles.container}>
             <AdaptiveButton
                 action={handleNewGame}
-                noJsFallBack={`/tipsy/game?playerOne=${playerName}`}
+                noJsFallBack={`/tipsy/game?playerName=${playerName}`}
             >
                 <Text style={styles.goButton}>New game</Text>
             </AdaptiveButton>
