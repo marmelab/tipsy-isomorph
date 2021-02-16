@@ -17,6 +17,10 @@ test:
 	@echo "Launch the tests"
 	docker-compose run --rm tipsy-isomorph yarn test
 
+build:
+	@echo "Launch the tests"
+	docker-compose run --rm tipsy-isomorph yarn build
+
 dev:
 	@echo "Dev mode"
 	docker-compose run -p 3000:3000 --rm tipsy-isomorph yarn dev
