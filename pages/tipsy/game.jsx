@@ -33,18 +33,23 @@ const Game = ({ currentGame, playerName }) => {
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
     const [game, setGame] = useState(currentGame);
-    const router = useRouter();
+    const updateGame = () => {
+        gameApi.getGame(game.id).then((game) => {
+            setGame(game);
+        });
+    };
     useEffect(() => {
-        const updateGame = setInterval(function () {
+        const updateGameInterval = setInterval(function () {
             if (game.currentPlayer !== playerName || !isGameFull(game)) {
-                router.reload();
+                updateGame();
             }
-        }, 3000);
+        }, 1000);
 
         return () => {
-            clearInterval(updateGame);
+            clearInterval(updateGameInterval);
         };
     }, [game.id]);
+
     const replace = useCallback(() => {
         if (replaceState === "loading") {
             return;
@@ -56,7 +61,7 @@ const Game = ({ currentGame, playerName }) => {
                 setError(error);
             })
             .then(() => {
-                router.reload();
+                updateGame();
             })
             .finally(() => {
                 setReplaceState("pending");
@@ -75,7 +80,7 @@ const Game = ({ currentGame, playerName }) => {
                     setError(error);
                 })
                 .then(() => {
-                    router.reload();
+                    updateGame();
                 })
                 .finally(() => {
                     setTiltState("pending");
