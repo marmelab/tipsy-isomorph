@@ -1,8 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native-web";
+
 import GameStatus from "../../lib/game/GameStatus.jsx";
 import gameApi from "../../lib/game/GameApi.jsx";
+import defaultGame from "../../lib/game/default-game.json";
 import Cell from "../../lib/game/Cell.jsx";
+import PropTypes from "prop-types";
 
 const boardObstacles = [
     ["topleft", "exit", "top", "top", "top", "top", "topright"],
@@ -22,15 +25,22 @@ const boardObstacles = [
     ],
 ];
 
-const Game = () => {
+const Game = ({ currentGame }) => {
     const [error, setError] = useState();
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
-    const [game, setGame] = useState({});
-    const [gameState, setGameState] = useState("pending");
+    const [game, setGame] = useState(currentGame ? currentGame : defaultGame);
+    const [gameState, setGameState] = useState(
+        currentGame ? "loaded" : "pending"
+    );
 
     useEffect(() => {
+        if (!process.browser) {
+            console.log("not in browser");
+            return;
+        }
         if (gameState != "pending") {
+            console.log("Not pending");
             return;
         }
         setGameState("loading");
@@ -178,6 +188,17 @@ const Game = () => {
         </View>
     );
 };
+
+Game.propTypes = {
+    currentGame: PropTypes.object,
+};
+
+export async function getServerSideProps() {
+    let game = await gameApi.newGame("Brice");
+    game = await gameApi.joinGame("Maxime", game.id);
+
+    return { props: { currentGame: game } };
+}
 
 const styles = StyleSheet.create({
     row: {

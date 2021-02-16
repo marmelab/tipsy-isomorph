@@ -1,0 +1,26 @@
+{
+    "id": 1,
+    "players": [
+        { "color": "red", "name": "thiery", "current": true },
+        { "color": "blue", "name": "", "current": false }
+    ],
+    "scores": { "blue": 0, "red": 0 },
+    "currentPlayer": "thiery",
+    "remainingTurns": 2,
+    "pucks": [
+        { "color": "blue", "position": { "x": 1, "y": 2 }, "flipped": false },
+        { "color": "blue", "position": { "x": 1, "y": 4 }, "flipped": false },
+        { "color": "red", "position": { "x": 2, "y": 1 }, "flipped": false },
+        { "color": "red", "position": { "x": 2, "y": 3 }, "flipped": false },
+        { "color": "red", "position": { "x": 2, "y": 5 }, "flipped": false },
+        { "color": "blue", "position": { "x": 3, "y": 2 }, "flipped": false },
+        { "color": "black", "position": { "x": 3, "y": 3 }, "flipped": false },
+        { "color": "blue", "position": { "x": 3, "y": 4 }, "flipped": false },
+        { "color": "red", "position": { "x": 4, "y": 1 }, "flipped": false },
+        { "color": "red", "position": { "x": 4, "y": 3 }, "flipped": false },
+        { "color": "red", "position": { "x": 4, "y": 5 }, "flipped": false },
+        { "color": "blue", "position": { "x": 5, "y": 2 }, "flipped": false },
+        { "color": "blue", "position": { "x": 5, "y": 4 }, "flipped": false }
+    ],
+    "fallenPucks": [0, 0]
+}
