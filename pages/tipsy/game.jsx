@@ -33,6 +33,7 @@ const Game = ({ currentGame }) => {
     const [gameState, setGameState] = useState(
         currentGame ? "loaded" : "pending"
     );
+    const [jsOnlyStyle, setJsOnlyStyle] = useState({ display: "none" });
 
     useEffect(() => {
         if (!process.browser) {
@@ -43,6 +44,7 @@ const Game = ({ currentGame }) => {
             console.log("Not pending");
             return;
         }
+
         setGameState("loading");
         gameApi
             .newGame("Brice")
@@ -56,6 +58,10 @@ const Game = ({ currentGame }) => {
                 setGameState("loaded");
             });
     }, [setGameState, setGame, gameState]);
+
+    useEffect(() => {
+        setJsOnlyStyle({});
+    });
 
     const replace = useCallback(() => {
         if (replaceState === "loading") {
@@ -129,7 +135,10 @@ const Game = ({ currentGame }) => {
                     onPress={() => tilt("west", game.currentPlayer)}
                 >
                     <View style={styles.leftArrow}>
-                        <Text>◄</Text>
+                        <noscript>
+                            <a href="http://test.com">◄</a>
+                        </noscript>
+                        <Text style={jsOnlyStyle}>◄</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={styles.board}>
@@ -137,7 +146,10 @@ const Game = ({ currentGame }) => {
                         onPress={() => tilt("north", game.currentPlayer)}
                     >
                         <View style={styles.upArrow}>
-                            <Text>▲</Text>
+                            <noscript>
+                                <a href="http://test.com">▲</a>
+                            </noscript>
+                            <Text style={jsOnlyStyle}>▲</Text>
                         </View>
                     </TouchableOpacity>
                     {boardObstacles.map((row, y) => {
@@ -162,7 +174,10 @@ const Game = ({ currentGame }) => {
                         onPress={() => tilt("south", game.currentPlayer)}
                     >
                         <View style={styles.downArrow}>
-                            <Text>▼</Text>
+                            <noscript>
+                                <a href="http://test.com">▼</a>
+                            </noscript>
+                            <Text style={jsOnlyStyle}>▼</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -172,7 +187,10 @@ const Game = ({ currentGame }) => {
                     onPress={() => tilt("east", game.currentPlayer)}
                 >
                     <View style={styles.rightArrow}>
-                        <Text>►</Text>
+                        <noscript>
+                            <a href="http://test.com">►</a>
+                        </noscript>
+                        <Text style={jsOnlyStyle}>►</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -201,6 +219,9 @@ export async function getServerSideProps() {
 }
 
 const styles = StyleSheet.create({
+    jsonly: {
+        display: "none",
+    },
     row: {
         height: 36,
         flexDirection: "row",
@@ -209,8 +230,6 @@ const styles = StyleSheet.create({
     },
     board: {
         flex: 1,
-        marginTop: 20,
-        marginLeft: 20,
     },
     game: {
         flex: 1,
