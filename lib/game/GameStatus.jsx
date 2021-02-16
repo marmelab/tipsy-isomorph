@@ -30,8 +30,8 @@ GameStatus.propTypes = {
 };
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 40,
-        margin: 100,
+        marginTop: 10,
+        marginBottom: 50,
         height: 30,
         alignItems: "center",
         alignContent: "center",
