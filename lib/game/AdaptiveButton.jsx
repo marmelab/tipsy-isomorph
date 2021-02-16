@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity, Text, View } from "react-native-web";
+import { TouchableOpacity, View } from "react-native-web";
 import PropTypes from "prop-types";
 
 const AdaptiveButton = ({ action, noJsFallBack, style, children }) => {
@@ -16,7 +16,7 @@ const AdaptiveButton = ({ action, noJsFallBack, style, children }) => {
                 <noscript>
                     <a href={noJsFallBack}>{children}</a>
                 </noscript>
-                <View style={jsOnlyStyle}>{children}</View>
+                <div style={jsOnlyStyle}>{children}</div>
             </View>
         </TouchableOpacity>
     );

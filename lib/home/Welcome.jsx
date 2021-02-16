@@ -1,17 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View, StyleSheet, Pressable } from "react-native-web";
 import PropTypes from "prop-types";
+import { useRouter } from "next/router";
+import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
+import GridLoader from "react-spinners/GridLoader";
 
 const Welcome = ({ playerName }) => {
+    const [creatingGame, setCreatingGame] = useState(false);
+    const router = useRouter();
+    const handleNewGame = () => {
+        setCreatingGame(true);
+        router.push(`/tipsy/game?playerOne=${playerName}`);
+    };
+    if (creatingGame) {
+        return (
+            <View style={styles.container}>
+                <GridLoader color="white" size={50} />
+            </View>
+        );
+    }
     return (
         <View style={styles.container}>
-            <Pressable
-                style={styles.goButton}
-                title="New game"
-                onPress={() => alert("NewGame")}
+            <AdaptiveButton
+                action={handleNewGame}
+                noJsFallBack={`/tipsy/game?playerOne=${playerName}`}
             >
                 <Text style={styles.goButton}>New game</Text>
-            </Pressable>
+            </AdaptiveButton>
             <Pressable
                 title="Join game"
                 onPress={() => alert("JoinGame" + playerName)}
@@ -23,8 +38,9 @@ const Welcome = ({ playerName }) => {
 };
 
 Welcome.propTypes = {
-    playerName: PropTypes.string,
+    playerName: PropTypes.string.isRequired,
 };
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

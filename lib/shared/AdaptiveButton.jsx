@@ -25,7 +25,7 @@ const AdaptiveButton = ({ action, noJsFallBack, style, children }) => {
 AdaptiveButton.propTypes = {
     action: PropTypes.func.isRequired,
     noJsFallBack: PropTypes.string.isRequired,
-    style: PropTypes.object.isRequired,
+    style: PropTypes.object,
     children: PropTypes.node.isRequired,
 };
 export default AdaptiveButton;
