@@ -6,7 +6,12 @@ const Home = () => {
     const [playerName, setPlayerName] = useState("");
 
     if (!playerName) {
-        return <PlayerInputName onPress={setPlayerName}></PlayerInputName>;
+        return (
+            <PlayerInputName
+                onPress={setPlayerName}
+                onPressFallBack={"/tipsy/game"}
+            ></PlayerInputName>
+        );
     }
     return <Welcome playerName={playerName}></Welcome>;
 };
