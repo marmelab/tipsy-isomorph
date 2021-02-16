@@ -4,17 +4,26 @@ import PropTypes from "prop-types";
 
 const backgroundColor = "#fff";
 
-const Waiting = ({ playerName }) => {
+const Waiting = ({ playerName, host, game }) => {
+    if (!host && typeof window !== "undefined") {
+        host = window.location.hostname;
+    }
     return (
         <View style={styles.container}>
             <Text>{playerName}</Text>
             <Text>Waiting for opponent</Text>
+            <Text>
+                Invite link :{" "}
+                {`http://localhost:3000/tipsy/game/${game.id}/join`}
+            </Text>
         </View>
     );
 };
 
 Waiting.propTypes = {
     playerName: PropTypes.string,
+    host: PropTypes.string,
+    game: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native-web";
 
 import GameStatus from "../../lib/game/GameStatus.jsx";
-import gameApi from "../../lib/game/GameApi.jsx";
+import gameApi from "../../lib/game/GameApi.js";
 import defaultGame from "../../lib/game/default-game.json";
 import Cell from "../../lib/game/Cell.jsx";
 import AdaptiveButton from "../../lib/game/AdaptiveButton.jsx";
@@ -120,7 +120,7 @@ const Game = ({ currentGame, playerName }) => {
         );
     }
     if (!isGameFull(game)) {
-        return <Waiting></Waiting>;
+        return <Waiting game={game}></Waiting>;
     }
 
     return (

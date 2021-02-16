@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import PlayerInputName from "../../lib/home/PlayerNameInput.jsx";
+import PlayerInputName from "../../lib/shared/PlayerNameInput.jsx";
 import Welcome from "../../lib/home/Welcome.jsx";
 
 const Home = () => {
     const [playerName, setPlayerName] = useState("");
 
     if (!playerName) {
-        return (
-            <PlayerInputName setPlayerName={setPlayerName}></PlayerInputName>
-        );
+        return <PlayerInputName onPress={setPlayerName}></PlayerInputName>;
     }
     return <Welcome playerName={playerName}></Welcome>;
 };

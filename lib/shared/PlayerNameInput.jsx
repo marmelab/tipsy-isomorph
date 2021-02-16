@@ -2,7 +2,7 @@ import { Pressable, TextInput, View, StyleSheet, Text } from "react-native-web";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-const PlayerInputName = ({ setPlayerName }) => {
+const PlayerInputName = ({ onPress }) => {
     const [playerName, updatePlayerName] = useState("");
     return (
         <View style={styles.container}>
@@ -17,7 +17,7 @@ const PlayerInputName = ({ setPlayerName }) => {
             <Pressable
                 title="Go"
                 disabled={!playerName || playerName === "bot"}
-                onPress={() => setPlayerName(playerName)}
+                onPress={() => onPress(playerName)}
             >
                 <Text style={styles.goButton}>Go</Text>
             </Pressable>
@@ -25,7 +25,7 @@ const PlayerInputName = ({ setPlayerName }) => {
     );
 };
 PlayerInputName.propTypes = {
-    setPlayerName: PropTypes.func,
+    onPress: PropTypes.func,
 };
 
 const styles = StyleSheet.create({
