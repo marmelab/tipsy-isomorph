@@ -180,7 +180,7 @@ const Game = ({ currentGame }) => {
                 <AdaptiveButton
                     action={() => replace()}
                     noJsFallBack={`/tipsy/game?id=${game.id}&action=replace`}
-                    text="►"
+                    text="Replace"
                     style={styles.rightArrow}
                 />
             ) : null}
