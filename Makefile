@@ -11,14 +11,20 @@ install:
 
 start:
 	@echo "Start the project"
+	docker-compose run --rm tipsy-isomorph yarn build
 	docker-compose up --force-recreate -d
-	
+
+stop:
+	@echo "Stop the project"
+	docker-compose down
+
 test:
 	@echo "Launch the tests"
 	docker-compose run --rm tipsy-isomorph yarn test
 
+
 build:
-	@echo "Launch the tests"
+	@echo "Build the app"
 	docker-compose run --rm tipsy-isomorph yarn build
 
 dev:
