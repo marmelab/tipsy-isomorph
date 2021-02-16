@@ -134,16 +134,18 @@ const Game = ({ currentGame }) => {
                 <AdaptiveButton
                     action={() => tilt("west", game.currentPlayer)}
                     noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west`}
-                    text="◄"
                     style={styles.leftArrow}
-                />
+                >
+                    ◄
+                </AdaptiveButton>
                 <View style={styles.board}>
                     <AdaptiveButton
                         action={() => tilt("north", game.currentPlayer)}
                         noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north`}
-                        text="▲"
                         style={styles.upArrow}
-                    />
+                    >
+                        ▲
+                    </AdaptiveButton>
                     {boardObstacles.map((row, y) => {
                         return (
                             <View key={"row" + y} style={styles.row}>
@@ -164,25 +166,28 @@ const Game = ({ currentGame }) => {
                     <AdaptiveButton
                         action={() => tilt("south", game.currentPlayer)}
                         noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south`}
-                        text="▼"
                         style={styles.downArrow}
-                    />
+                    >
+                        ▼
+                    </AdaptiveButton>
                 </View>
                 <AdaptiveButton
                     action={() => tilt("east", game.currentPlayer)}
                     noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east`}
-                    text="►"
                     style={styles.rightArrow}
-                />
+                >
+                    ►
+                </AdaptiveButton>
             </View>
             {game.remainingTurns == 0 &&
             (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
                 <AdaptiveButton
                     action={() => replace()}
                     noJsFallBack={`/tipsy/game?id=${game.id}&action=replace`}
-                    text="Replace"
                     style={styles.rightArrow}
-                />
+                >
+                    Replace
+                </AdaptiveButton>
             ) : null}
         </View>
     );
