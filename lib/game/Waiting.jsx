@@ -6,16 +6,13 @@ const backgroundColor = "#fff";
 
 const Waiting = ({ playerName, host, game }) => {
     if (!host && typeof window !== "undefined") {
-        host = window.location.hostname;
+        host = window.location.origin;
     }
     return (
         <View style={styles.container}>
             <Text>{playerName}</Text>
             <Text>Waiting for opponent</Text>
-            <Text>
-                Invite link :{" "}
-                {`http://localhost:3000/tipsy/game/${game.id}/join`}
-            </Text>
+            <Text>Invite link : {`${host}/tipsy/game/${game.id}/join`}</Text>
         </View>
     );
 };

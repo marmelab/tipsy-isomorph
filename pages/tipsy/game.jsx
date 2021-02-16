@@ -28,7 +28,7 @@ const boardObstacles = [
     ],
 ];
 
-const Game = ({ currentGame, playerName }) => {
+const Game = ({ currentGame, playerName, host }) => {
     const [error, setError] = useState();
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
@@ -191,9 +191,10 @@ const Game = ({ currentGame, playerName }) => {
 Game.propTypes = {
     currentGame: PropTypes.object,
     playerName: PropTypes.string.isRequired,
+    host: PropTypes.string,
 };
 
-export async function getServerSideProps({ query, res }) {
+export async function getServerSideProps({ query, res, req }) {
     const { id, action, direction, playerName } = query;
     let game;
     switch (action) {
@@ -218,7 +219,13 @@ export async function getServerSideProps({ query, res }) {
             break;
     }
 
-    return { props: { currentGame: game, playerName } };
+    return {
+        props: {
+            currentGame: game,
+            playerName,
+            host: `http://${req.headers.host}`,
+        },
+    };
 }
 
 const styles = StyleSheet.create({
