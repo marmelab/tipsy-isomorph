@@ -229,7 +229,6 @@ Game.propTypes = {
 
 export async function getServerSideProps({ query, res }) {
     const { id, action, direction } = query;
-    console.log(`${id} ${action} ${direction}`);
     let game;
     switch (action) {
         case "tilt":
@@ -251,7 +250,6 @@ export async function getServerSideProps({ query, res }) {
             break;
     }
 
-    console.dir(game);
     return { props: { currentGame: game } };
 }
 
