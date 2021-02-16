@@ -8,6 +8,7 @@ import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
 import isGameFull from "../../lib/shared/tools";
 import Waiting from "../../lib/game/Waiting.jsx";
 import PropTypes from "prop-types";
+import Head from "next/head";
 
 const boardObstacles = [
     ["topleft", "exit", "top", "obstacle", "top", "top", "topright"],
@@ -96,7 +97,19 @@ const Game = ({ currentGame, playerName, host }) => {
         );
     }
     if (!isGameFull(game)) {
-        return <Waiting game={game} host={host}></Waiting>;
+        return (
+            <div>
+                <Head>
+                    <noscript>
+                        <meta
+                            httpEquiv="refresh"
+                            content={`3; url=/tipsy/game?id=${game.id}&playerName=${playerName}`}
+                        />
+                    </noscript>
+                </Head>
+                <Waiting game={game} host={host}></Waiting>
+            </div>
+        );
     }
 
     return (
@@ -110,6 +123,14 @@ const Game = ({ currentGame, playerName, host }) => {
                 },
             ]}
         >
+            <Head>
+                <noscript>
+                    <meta
+                        httpEquiv="refresh"
+                        content={`3; url=/tipsy/game?id=${game.id}&playerName=${playerName}`}
+                    />
+                </noscript>
+            </Head>
             <GameStatus game={game}></GameStatus>
             <View style={styles.game}>
                 {game.currentPlayer === playerName &&
