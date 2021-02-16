@@ -216,7 +216,12 @@ const Game = ({ currentGame }) => {
                     style={styles.button}
                     onPress={() => replace()}
                 >
-                    <Text>Replace pucks</Text>
+                    <noscript>
+                        <a href={`/tipsy/game?id=${game.id}&action=replace`}>
+                            Replace pucks
+                        </a>
+                    </noscript>
+                    <Text style={jsOnlyStyle}>Replace pucks</Text>
                 </TouchableOpacity>
             ) : null}
         </View>
@@ -236,6 +241,7 @@ export async function getServerSideProps({ query, res }) {
             game = await gameApi.tilt(direction, game.currentPlayer, game.id);
             break;
         case "replace":
+            game = await gameApi.replace(id);
             break;
         default:
             if (id) {
