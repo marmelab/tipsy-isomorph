@@ -116,7 +116,7 @@ const Game = ({ currentGame, playerName, host }) => {
                 game.remainingTurns > 0 ? (
                     <AdaptiveButton
                         action={() => tilt("west", game.currentPlayer)}
-                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west`}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerName=${playerName}`}
                         style={styles.leftArrow}
                     >
                         ◄
@@ -127,7 +127,7 @@ const Game = ({ currentGame, playerName, host }) => {
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
                             action={() => tilt("north", game.currentPlayer)}
-                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north`}
+                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerName=${playerName}`}
                             style={styles.upArrow}
                         >
                             ▲
@@ -154,7 +154,7 @@ const Game = ({ currentGame, playerName, host }) => {
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
                             action={() => tilt("south", game.currentPlayer)}
-                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south`}
+                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerName=${playerName}`}
                             style={styles.downArrow}
                         >
                             ▼
@@ -166,7 +166,7 @@ const Game = ({ currentGame, playerName, host }) => {
                 game.remainingTurns > 0 ? (
                     <AdaptiveButton
                         action={() => tilt("east", game.currentPlayer)}
-                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east`}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerName=${playerName}`}
                         style={styles.rightArrow}
                     >
                         ►
@@ -177,7 +177,7 @@ const Game = ({ currentGame, playerName, host }) => {
             (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
                 <AdaptiveButton
                     action={() => replace()}
-                    noJsFallBack={`/tipsy/game?id=${game.id}&action=replace`}
+                    noJsFallBack={`/tipsy/game?id=${game.id}&action=replace&playerName=${playerName}`}
                     style={styles.rightArrow}
                 >
                     Replace

@@ -11,10 +11,23 @@ const Join = ({ gameId }) => {
         router.push(`/tipsy/game?id=${gameId}&playerName=${playerName}`);
     };
 
-    return <PlayerInputName onPress={joinGame}></PlayerInputName>;
+    return (
+        <PlayerInputName
+            onPress={joinGame}
+            onPressFallBack={`/tipsy/game/${gameId}/join`}
+        ></PlayerInputName>
+    );
 };
-export async function getServerSideProps({ query }) {
-    const { gameId } = query;
+export async function getServerSideProps({ query, res }) {
+    const { gameId, playerName } = query;
+    if (playerName) {
+        await gameApi.joinGame(playerName, gameId);
+        res.writeHead(302, {
+            Location: `/tipsy/game?id=${gameId}&playerName=${playerName}`,
+        });
+        res.end();
+        return;
+    }
 
     return { props: { gameId } };
 }
