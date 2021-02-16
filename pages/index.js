@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native-web";
 import React from "react";
 import Game from "./tipsy/game.jsx";
 

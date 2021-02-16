@@ -5,10 +5,11 @@ import GameStatus from "../../lib/game/GameStatus.jsx";
 import gameApi from "../../lib/game/GameApi.jsx";
 import defaultGame from "../../lib/game/default-game.json";
 import Cell from "../../lib/game/Cell.jsx";
+import AdaptiveButton from "../../lib/game/AdaptiveButton.jsx";
 import PropTypes from "prop-types";
 
 const boardObstacles = [
-    ["topleft", "exit", "top", "top", "top", "top", "topright"],
+    ["topleft", "exit", "top", "obstacle", "top", "top", "topright"],
     ["left", "obstacle", "cell", "cell", "cell", "obstacle", "exit"],
     ["left", "cell", "obstacle", "cell", "obstacle", "cell", "right"],
     ["obstacle", "cell", "cell", "cell", "cell", "cell", "obstacle"],
@@ -33,16 +34,16 @@ const Game = ({ currentGame }) => {
     const [gameState, setGameState] = useState(
         currentGame ? "loaded" : "pending"
     );
+    const [jsOnlyStyle, setJsOnlyStyle] = useState({ display: "none" });
 
     useEffect(() => {
         if (!process.browser) {
-            console.log("not in browser");
             return;
         }
         if (gameState != "pending") {
-            console.log("Not pending");
             return;
         }
+
         setGameState("loading");
         gameApi
             .newGame("Brice")
@@ -56,6 +57,12 @@ const Game = ({ currentGame }) => {
                 setGameState("loaded");
             });
     }, [setGameState, setGame, gameState]);
+
+    useEffect(() => {
+        if (jsOnlyStyle.display) {
+            setJsOnlyStyle({});
+        }
+    }, [jsOnlyStyle, setJsOnlyStyle]);
 
     const replace = useCallback(() => {
         if (replaceState === "loading") {
@@ -124,22 +131,21 @@ const Game = ({ currentGame }) => {
         >
             <GameStatus game={game}></GameStatus>
             <View style={styles.game}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => tilt("west", game.currentPlayer)}
+                <AdaptiveButton
+                    action={() => tilt("west", game.currentPlayer)}
+                    noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west`}
+                    style={styles.leftArrow}
                 >
-                    <View style={styles.leftArrow}>
-                        <Text>◄</Text>
-                    </View>
-                </TouchableOpacity>
+                    ◄
+                </AdaptiveButton>
                 <View style={styles.board}>
-                    <TouchableOpacity
-                        onPress={() => tilt("north", game.currentPlayer)}
+                    <AdaptiveButton
+                        action={() => tilt("north", game.currentPlayer)}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north`}
+                        style={styles.upArrow}
                     >
-                        <View style={styles.upArrow}>
-                            <Text>▲</Text>
-                        </View>
-                    </TouchableOpacity>
+                        ▲
+                    </AdaptiveButton>
                     {boardObstacles.map((row, y) => {
                         return (
                             <View key={"row" + y} style={styles.row}>
@@ -157,33 +163,31 @@ const Game = ({ currentGame }) => {
                             </View>
                         );
                     })}
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => tilt("south", game.currentPlayer)}
+                    <AdaptiveButton
+                        action={() => tilt("south", game.currentPlayer)}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south`}
+                        style={styles.downArrow}
                     >
-                        <View style={styles.downArrow}>
-                            <Text>▼</Text>
-                        </View>
-                    </TouchableOpacity>
+                        ▼
+                    </AdaptiveButton>
                 </View>
-
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => tilt("east", game.currentPlayer)}
+                <AdaptiveButton
+                    action={() => tilt("east", game.currentPlayer)}
+                    noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east`}
+                    style={styles.rightArrow}
                 >
-                    <View style={styles.rightArrow}>
-                        <Text>►</Text>
-                    </View>
-                </TouchableOpacity>
+                    ►
+                </AdaptiveButton>
             </View>
             {game.remainingTurns == 0 &&
             (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => replace()}
+                <AdaptiveButton
+                    action={() => replace()}
+                    noJsFallBack={`/tipsy/game?id=${game.id}&action=replace`}
+                    style={styles.rightArrow}
                 >
-                    <Text>Replace pucks</Text>
-                </TouchableOpacity>
+                    Replace
+                </AdaptiveButton>
             ) : null}
         </View>
     );
@@ -193,14 +197,37 @@ Game.propTypes = {
     currentGame: PropTypes.object,
 };
 
-export async function getServerSideProps() {
-    let game = await gameApi.newGame("Brice");
-    game = await gameApi.joinGame("Maxime", game.id);
+export async function getServerSideProps({ query, res }) {
+    const { id, action, direction } = query;
+    let game;
+    switch (action) {
+        case "tilt":
+            game = await gameApi.getGame(id);
+            game = await gameApi.tilt(direction, game.currentPlayer, game.id);
+            break;
+        case "replace":
+            game = await gameApi.replace(id);
+            break;
+        default:
+            if (id) {
+                game = await gameApi.getGame(id);
+            } else {
+                game = await gameApi.newGame("Brice");
+                game = await gameApi.joinGame("Maxime", game.id);
+                res.writeHead(302, { Location: `/tipsy/game?id=${game.id}` });
+                res.end();
+                return;
+            }
+            break;
+    }
 
     return { props: { currentGame: game } };
 }
 
 const styles = StyleSheet.create({
+    jsonly: {
+        display: "none",
+    },
     row: {
         height: 36,
         flexDirection: "row",
@@ -209,8 +236,6 @@ const styles = StyleSheet.create({
     },
     board: {
         flex: 1,
-        marginTop: 20,
-        marginLeft: 20,
     },
     game: {
         flex: 1,
