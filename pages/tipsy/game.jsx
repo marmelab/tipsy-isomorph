@@ -5,6 +5,7 @@ import GameStatus from "../../lib/game/GameStatus.jsx";
 import gameApi from "../../lib/game/GameApi.jsx";
 import defaultGame from "../../lib/game/default-game.json";
 import Cell from "../../lib/game/Cell.jsx";
+import AdaptiveButton from "../../lib/game/AdaptiveButton.jsx";
 import PropTypes from "prop-types";
 
 const boardObstacles = [
@@ -130,36 +131,19 @@ const Game = ({ currentGame }) => {
         >
             <GameStatus game={game}></GameStatus>
             <View style={styles.game}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => tilt("west", game.currentPlayer)}
-                >
-                    <View style={styles.leftArrow}>
-                        <noscript>
-                            <a
-                                href={`/tipsy/game?id=${game.id}&action=tilt&direction=west`}
-                            >
-                                ◄
-                            </a>
-                        </noscript>
-                        <Text style={jsOnlyStyle}>◄</Text>
-                    </View>
-                </TouchableOpacity>
+                <AdaptiveButton
+                    action={() => tilt("west", game.currentPlayer)}
+                    noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west`}
+                    text="◄"
+                    style={styles.leftArrow}
+                />
                 <View style={styles.board}>
-                    <TouchableOpacity
-                        onPress={() => tilt("north", game.currentPlayer)}
-                    >
-                        <View style={styles.upArrow}>
-                            <noscript>
-                                <a
-                                    href={`/tipsy/game?id=${game.id}&action=tilt&direction=north`}
-                                >
-                                    ▲
-                                </a>
-                            </noscript>
-                            <Text style={jsOnlyStyle}>▲</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <AdaptiveButton
+                        action={() => tilt("north", game.currentPlayer)}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north`}
+                        text="▲"
+                        style={styles.upArrow}
+                    />
                     {boardObstacles.map((row, y) => {
                         return (
                             <View key={"row" + y} style={styles.row}>
@@ -177,52 +161,28 @@ const Game = ({ currentGame }) => {
                             </View>
                         );
                     })}
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => tilt("south", game.currentPlayer)}
-                    >
-                        <View style={styles.downArrow}>
-                            <noscript>
-                                <a
-                                    href={`/tipsy/game?id=${game.id}&action=tilt&direction=south`}
-                                >
-                                    ▼
-                                </a>
-                            </noscript>
-                            <Text style={jsOnlyStyle}>▼</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <AdaptiveButton
+                        action={() => tilt("south", game.currentPlayer)}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south`}
+                        text="▼"
+                        style={styles.downArrow}
+                    />
                 </View>
-
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => tilt("east", game.currentPlayer)}
-                >
-                    <View style={styles.rightArrow}>
-                        <noscript>
-                            <a
-                                href={`/tipsy/game?id=${game.id}&action=tilt&direction=east`}
-                            >
-                                ►
-                            </a>
-                        </noscript>
-                        <Text style={jsOnlyStyle}>►</Text>
-                    </View>
-                </TouchableOpacity>
+                <AdaptiveButton
+                    action={() => tilt("east", game.currentPlayer)}
+                    noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east`}
+                    text="►"
+                    style={styles.rightArrow}
+                />
             </View>
             {game.remainingTurns == 0 &&
             (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => replace()}
-                >
-                    <noscript>
-                        <a href={`/tipsy/game?id=${game.id}&action=replace`}>
-                            Replace pucks
-                        </a>
-                    </noscript>
-                    <Text style={jsOnlyStyle}>Replace pucks</Text>
-                </TouchableOpacity>
+                <AdaptiveButton
+                    action={() => replace()}
+                    noJsFallBack={`/tipsy/game?id=${game.id}&action=replace`}
+                    text="►"
+                    style={styles.rightArrow}
+                />
             ) : null}
         </View>
     );
