@@ -3,23 +3,16 @@ import { Text, View, StyleSheet } from "react-native-web";
 import PropTypes from "prop-types";
 
 const GameStatus = ({ game }) => {
-    const currentPlayerColor = () => {
-        return game.players.find((player) => player.current).color;
+    const currentPlayer = () => {
+        return game.players.find((player) => player.current);
     };
-    const getColorStyle = () => {
-        switch (currentPlayerColor) {
-            case "blue":
-                return styles.blue;
-            case "red":
-                return styles.red;
-        }
-    };
+
     return (
         <View style={styles.container}>
-            <Text style={[styles.text, getColorStyle()]}>
-                {`${game.currentPlayer} turn!`}
+            <Text style={[styles.text, styles[currentPlayer().color]]}>
+                {`${currentPlayer().name} turn!`}
             </Text>
-            <Text style={[styles.text, getColorStyle()]}>
+            <Text style={[styles.text, styles[currentPlayer().color]]}>
                 {game.remainingTurns}
             </Text>
         </View>
