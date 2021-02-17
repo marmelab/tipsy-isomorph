@@ -1,13 +1,18 @@
 import { StyleSheet, View } from "react-native-web";
 import React from "react";
-import Game from "./tipsy/game.jsx";
+import Home from "./tipsy/home.jsx";
 
 export default function App() {
     return (
         <View style={styles.container}>
-            <Game />
+            <Home />
         </View>
     );
+}
+
+export async function getServerSideProps({ res }) {
+    res.writeHead(302, { Location: `/tipsy/home` });
+    res.end();
 }
 
 const styles = StyleSheet.create({

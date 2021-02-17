@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native-web";
 import PropTypes from "prop-types";
 
-const AdaptiveButton = ({ action, noJsFallBack, style, children }) => {
+const AdaptiveButton = ({ action, noJsFallBack, style = {}, children }) => {
     const [jsOnlyStyle, setJsOnlyStyle] = useState({ display: "none" });
 
     useEffect(() => {
@@ -16,7 +16,7 @@ const AdaptiveButton = ({ action, noJsFallBack, style, children }) => {
                 <noscript>
                     <a href={noJsFallBack}>{children}</a>
                 </noscript>
-                <div style={jsOnlyStyle}>{children}</div>
+                <View style={jsOnlyStyle}>{children}</View>
             </View>
         </TouchableOpacity>
     );
@@ -25,7 +25,7 @@ const AdaptiveButton = ({ action, noJsFallBack, style, children }) => {
 AdaptiveButton.propTypes = {
     action: PropTypes.func.isRequired,
     noJsFallBack: PropTypes.string.isRequired,
-    style: PropTypes.object.isRequired,
+    style: PropTypes.object,
     children: PropTypes.node.isRequired,
 };
 export default AdaptiveButton;
