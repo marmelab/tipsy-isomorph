@@ -5,13 +5,13 @@ import { useRouter } from "next/router";
 import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
 import GridLoader from "react-spinners/GridLoader";
 
-const Welcome = ({ player }) => {
+const Welcome = ({ playerName }) => {
     const [creatingGame, setCreatingGame] = useState(false);
     const router = useRouter();
     const handleNewGame = (quickGame) => {
         setCreatingGame(true);
         router.push(
-            `/tipsy/game?playerName=${encodeURIComponent(player.name)}${
+            `/tipsy/game?playerName=${encodeURIComponent(playerName)}${
                 quickGame ? "&quickGame=true" : ""
             }`
         );
@@ -26,11 +26,11 @@ const Welcome = ({ player }) => {
     }
     return (
         <View style={styles.container}>
-            <Text>Welcome {player.name}</Text>
+            <Text>Welcome {playerName}</Text>
             <AdaptiveButton
                 action={handleNewGame}
                 noJsFallBack={`/tipsy/game?playerName=${encodeURIComponent(
-                    player.name
+                    playerName
                 )}`}
             >
                 <Text style={styles.goButton}>New game</Text>
@@ -39,7 +39,7 @@ const Welcome = ({ player }) => {
             <AdaptiveButton
                 action={() => handleNewGame(true)}
                 noJsFallBack={`/tipsy/game?playerName=${encodeURIComponent(
-                    player.name
+                    playerName
                 )}&quickGame=true`}
             >
                 <Text style={styles.goButton}>Quick game</Text>
@@ -49,7 +49,7 @@ const Welcome = ({ player }) => {
 };
 
 Welcome.propTypes = {
-    player: PropTypes.object.isRequired,
+    playerName: PropTypes.string.isRequired,
 };
 
 const styles = StyleSheet.create({

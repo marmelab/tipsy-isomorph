@@ -7,8 +7,8 @@ import { useRouter } from "next/router";
 const Join = ({ gameId }) => {
     const router = useRouter();
     const joinGame = async (playerName) => {
-        await gameApi.joinGame(playerName, gameId);
-        router.push(`/tipsy/game?id=${gameId}&playerName=${playerName}`);
+        const [, playerId] = await gameApi.joinGame(playerName, gameId);
+        router.push(`/tipsy/game?id=${gameId}&playerId=${playerId}`);
     };
 
     return (
@@ -21,9 +21,9 @@ const Join = ({ gameId }) => {
 export async function getServerSideProps({ query, res }) {
     const { gameId, playerName } = query;
     if (playerName) {
-        await gameApi.joinGame(playerName, gameId);
+        const [, playerId] = await gameApi.joinGame(playerName, gameId);
         res.writeHead(302, {
-            Location: `/tipsy/game?id=${gameId}&playerName=${playerName}`,
+            Location: `/tipsy/game?id=${gameId}&playerId=${playerId}`,
         });
         res.end();
         return;

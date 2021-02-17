@@ -28,7 +28,7 @@ const boardObstacles = [
     ],
 ];
 
-const Game = ({ currentGame, playerName, host }) => {
+const Game = ({ currentGame, playerId, host }) => {
     const [error, setError] = useState();
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
@@ -40,7 +40,7 @@ const Game = ({ currentGame, playerName, host }) => {
     };
     useEffect(() => {
         const updateGameInterval = setInterval(function () {
-            if (game.currentPlayer !== playerName || !isGameFull(game)) {
+            if (game.currentPlayer !== playerId || !isGameFull(game)) {
                 updateGame();
             }
         }, 2000);
@@ -69,13 +69,13 @@ const Game = ({ currentGame, playerName, host }) => {
     }, [replaceState, setReplaceState, game.id, error, setError, setGame]);
 
     const tilt = useCallback(
-        (direction, playerName) => {
+        (direction, playerId) => {
             if (tiltState === "loading") {
                 return;
             }
             setTiltState("loading");
             gameApi
-                .tilt(direction, playerName, game.id)
+                .tilt(direction, playerId, game.id)
                 .catch((error) => {
                     setError(error);
                 })
@@ -103,7 +103,7 @@ const Game = ({ currentGame, playerName, host }) => {
                     <noscript>
                         <meta
                             httpEquiv="refresh"
-                            content={`3; url=/tipsy/game?id=${game.id}&playerName=${playerName}`}
+                            content={`3; url=/tipsy/game?id=${game.id}&playerId=${playerId}`}
                         />
                     </noscript>
                 </Head>
@@ -127,28 +127,27 @@ const Game = ({ currentGame, playerName, host }) => {
                 <noscript>
                     <meta
                         httpEquiv="refresh"
-                        content={`3; url=/tipsy/game?id=${game.id}&playerName=${playerName}`}
+                        content={`3; url=/tipsy/game?id=${game.id}&playerId=${playerId}`}
                     />
                 </noscript>
             </Head>
             <GameStatus game={game}></GameStatus>
             <View style={styles.game}>
-                {game.currentPlayer === playerName &&
-                game.remainingTurns > 0 ? (
+                {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
                         action={() => tilt("west", game.currentPlayer)}
-                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerName=${playerName}`}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerId=${playerId}`}
                         style={styles.leftArrow}
                     >
                         ◄
                     </AdaptiveButton>
                 ) : null}
                 <View style={styles.board}>
-                    {game.currentPlayer === playerName &&
+                    {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
                             action={() => tilt("north", game.currentPlayer)}
-                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerName=${playerName}`}
+                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerId=${playerId}`}
                             style={styles.upArrow}
                         >
                             ▲
@@ -171,11 +170,11 @@ const Game = ({ currentGame, playerName, host }) => {
                             </View>
                         );
                     })}
-                    {game.currentPlayer === playerName &&
+                    {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
                             action={() => tilt("south", game.currentPlayer)}
-                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerName=${playerName}`}
+                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerId=${playerId}`}
                             style={styles.downArrow}
                         >
                             ▼
@@ -183,11 +182,10 @@ const Game = ({ currentGame, playerName, host }) => {
                     ) : null}
                 </View>
 
-                {game.currentPlayer === playerName &&
-                game.remainingTurns > 0 ? (
+                {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
                         action={() => tilt("east", game.currentPlayer)}
-                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerName=${playerName}`}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerId=${playerId}`}
                         style={styles.rightArrow}
                     >
                         ►
@@ -198,7 +196,7 @@ const Game = ({ currentGame, playerName, host }) => {
             (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
                 <AdaptiveButton
                     action={() => replace()}
-                    noJsFallBack={`/tipsy/game?id=${game.id}&action=replace&playerName=${playerName}`}
+                    noJsFallBack={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
                     style={styles.rightArrow}
                 >
                     Replace
@@ -210,12 +208,13 @@ const Game = ({ currentGame, playerName, host }) => {
 
 Game.propTypes = {
     currentGame: PropTypes.object,
-    playerName: PropTypes.string.isRequired,
+    playerId: PropTypes.string.isRequired,
     host: PropTypes.string,
 };
 
 export async function getServerSideProps({ query, res, req }) {
-    const { id, action, direction, playerName, quickGame } = query;
+    console.dir(query);
+    const { id, action, direction, playerName, playerId, quickGame } = query;
     let game;
     switch (action) {
         case "tilt":
@@ -229,9 +228,12 @@ export async function getServerSideProps({ query, res, req }) {
             if (id) {
                 game = await gameApi.getGame(id);
             } else {
-                game = await gameApi.newGame(playerName, quickGame);
+                const [game, playerId] = await gameApi.newGame(
+                    playerName,
+                    quickGame
+                );
                 res.writeHead(302, {
-                    Location: `/tipsy/game?id=${game.id}&playerName=${playerName}`,
+                    Location: `/tipsy/game?id=${game.id}&playerId=${playerId}`,
                 });
                 res.end();
                 return { props: {} };
@@ -242,7 +244,7 @@ export async function getServerSideProps({ query, res, req }) {
     return {
         props: {
             currentGame: game,
-            playerName,
+            playerId,
             host: `http://${req.headers.host}`,
         },
     };

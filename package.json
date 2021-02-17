@@ -12,7 +12,8 @@
         "react-dom": "^16.13.1",
         "react-native-web": "^0.13.14",
         "react-router-dom": "^5.2.0",
-        "react-spinners": "^0.10.6"
+        "react-spinners": "^0.10.6",
+        "uuid": "^8.3.2"
     },
     "devDependencies": {
         "@testing-library/cypress": "^7.0.3",
