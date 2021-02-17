@@ -13,7 +13,7 @@ export default function App() {
 export async function getServerSideProps({ res }) {
     res.writeHead(302, { Location: `/tipsy/home` });
     res.end();
-    return;
+    return {};
 }
 
 const styles = StyleSheet.create({
