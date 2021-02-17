@@ -43,7 +43,7 @@ const Game = ({ currentGame, playerName, host }) => {
             if (game.currentPlayer !== playerName || !isGameFull(game)) {
                 updateGame();
             }
-        }, 1000);
+        }, 2000);
 
         return () => {
             clearInterval(updateGameInterval);
@@ -215,7 +215,7 @@ Game.propTypes = {
 };
 
 export async function getServerSideProps({ query, res, req }) {
-    const { id, action, direction, playerName } = query;
+    const { id, action, direction, playerName, quickGame } = query;
     let game;
     switch (action) {
         case "tilt":
@@ -229,7 +229,7 @@ export async function getServerSideProps({ query, res, req }) {
             if (id) {
                 game = await gameApi.getGame(id);
             } else {
-                game = await gameApi.newGame(playerName);
+                game = await gameApi.newGame(playerName, quickGame);
                 res.writeHead(302, {
                     Location: `/tipsy/game?id=${game.id}&playerName=${playerName}`,
                 });

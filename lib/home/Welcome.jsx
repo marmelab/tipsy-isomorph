@@ -1,17 +1,22 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native-web";
+import { Text, View, StyleSheet } from "react-native-web";
 import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
 import GridLoader from "react-spinners/GridLoader";
 
-const Welcome = ({ playerName }) => {
+const Welcome = ({ player }) => {
     const [creatingGame, setCreatingGame] = useState(false);
     const router = useRouter();
-    const handleNewGame = () => {
+    const handleNewGame = (quickGame) => {
         setCreatingGame(true);
-        router.push(`/tipsy/game?playerName=${playerName}`);
+        router.push(
+            `/tipsy/game?playerName=${encodeURIComponent(player.name)}${
+                quickGame ? "&quickGame=true" : ""
+            }`
+        );
     };
+
     if (creatingGame) {
         return (
             <View style={styles.container}>
@@ -21,18 +26,30 @@ const Welcome = ({ playerName }) => {
     }
     return (
         <View style={styles.container}>
+            <Text>Welcome {player.name}</Text>
             <AdaptiveButton
                 action={handleNewGame}
-                noJsFallBack={`/tipsy/game?playerName=${playerName}`}
+                noJsFallBack={`/tipsy/game?playerName=${encodeURIComponent(
+                    player.name
+                )}`}
             >
                 <Text style={styles.goButton}>New game</Text>
+            </AdaptiveButton>
+
+            <AdaptiveButton
+                action={() => handleNewGame(true)}
+                noJsFallBack={`/tipsy/game?playerName=${encodeURIComponent(
+                    player.name
+                )}&quickGame=true`}
+            >
+                <Text style={styles.goButton}>Quick game</Text>
             </AdaptiveButton>
         </View>
     );
 };
 
 Welcome.propTypes = {
-    playerName: PropTypes.string.isRequired,
+    player: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
