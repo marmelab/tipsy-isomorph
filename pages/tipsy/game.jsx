@@ -214,7 +214,7 @@ export async function getServerSideProps({ query, res, req }) {
                     Location: `/tipsy/game?id=${game.id}&playerName=${playerName}`,
                 });
                 res.end();
-                return;
+                return { props: {} };
             }
             break;
     }
