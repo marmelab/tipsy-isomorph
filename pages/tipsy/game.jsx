@@ -223,18 +223,19 @@ export async function getServerSideProps({ query, req }) {
         case "replace":
             game = await gameApi.replace(id);
             break;
-        default:
+        default: {
             if (id) {
                 game = await gameApi.getGame(id);
-            } else {
-                const [newGame, newPlayerId] = await gameApi.newGame(
-                    playerName,
-                    quickGame
-                );
-                game = newGame;
-                playerId = newPlayerId;
+                break;
             }
+            const [newGame, newPlayerId] = await gameApi.newGame(
+                playerName ? playerName : "Anonymous",
+                quickGame
+            );
+            game = newGame;
+            playerId = newPlayerId;
             break;
+        }
     }
 
     return {
