@@ -212,9 +212,8 @@ Game.propTypes = {
     host: PropTypes.string,
 };
 
-export async function getServerSideProps({ query, res, req }) {
-    console.dir(query);
-    const { id, action, direction, playerName, playerId, quickGame } = query;
+export async function getServerSideProps({ query, req }) {
+    let { id, action, direction, playerName, playerId, quickGame } = query;
     let game;
     switch (action) {
         case "tilt":
@@ -228,15 +227,12 @@ export async function getServerSideProps({ query, res, req }) {
             if (id) {
                 game = await gameApi.getGame(id);
             } else {
-                const [game, playerId] = await gameApi.newGame(
+                const [newGame, newPlayerId] = await gameApi.newGame(
                     playerName,
                     quickGame
                 );
-                res.writeHead(302, {
-                    Location: `/tipsy/game?id=${game.id}&playerId=${playerId}`,
-                });
-                res.end();
-                return { props: {} };
+                game = newGame;
+                playerId = newPlayerId;
             }
             break;
     }

@@ -22,11 +22,12 @@ export async function getServerSideProps({ query, res }) {
     const { gameId, playerName } = query;
     if (playerName) {
         const [, playerId] = await gameApi.joinGame(playerName, gameId);
-        res.writeHead(302, {
-            Location: `/tipsy/game?id=${gameId}&playerId=${playerId}`,
-        });
-        res.end();
-        return;
+        res.setHeader(
+            "Location",
+            `/tipsy/game?id=${gameId}&playerId=${playerId}`
+        );
+        res.statusCode = 302;
+        return { props: {} };
     }
 
     return { props: { gameId } };
