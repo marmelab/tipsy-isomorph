@@ -27,12 +27,6 @@ const Welcome = ({ playerName }) => {
             >
                 <Text style={styles.goButton}>New game</Text>
             </AdaptiveButton>
-            <Pressable
-                title="Join game"
-                onPress={() => alert("JoinGame" + playerName)}
-            >
-                <Text style={styles.goButton}>Join game</Text>
-            </Pressable>
         </View>
     );
 };
