@@ -7,5 +7,6 @@ services:
             - ./:/tipsy
         command: yarn start
         working_dir: /tipsy
+        network_mode: "host"
         ports:
             - 3000:3000

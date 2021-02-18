@@ -136,7 +136,7 @@ const Game = ({ currentGame, playerId, host }) => {
                     />
                 </noscript>
             </Head>
-            <GameStatus game={game}></GameStatus>
+            <GameStatus game={game} playerId={playerId}></GameStatus>
             <View style={styles.game}>
                 {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
