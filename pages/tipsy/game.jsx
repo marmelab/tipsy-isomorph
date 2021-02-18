@@ -126,19 +126,7 @@ const Game = ({ currentGame, playerId, host }) => {
         );
     }
     if (!isGameFull(game)) {
-        return (
-            <div>
-                <Head>
-                    <noscript>
-                        <meta
-                            httpEquiv="refresh"
-                            content={`3; url=/tipsy/game?id=${game.id}&playerId=${playerId}`}
-                        />
-                    </noscript>
-                </Head>
-                <Waiting game={game} host={host}></Waiting>
-            </div>
-        );
+        return <Waiting game={game} host={host} playerId={playerId}></Waiting>;
     }
 
     return (
@@ -271,12 +259,6 @@ const Game = ({ currentGame, playerId, host }) => {
             </View>
         </View>
     );
-};
-
-Game.propTypes = {
-    currentGame: PropTypes.object,
-    playerId: PropTypes.string.isRequired,
-    host: PropTypes.string,
 };
 
 export async function getServerSideProps({ query, req }) {

@@ -1,24 +1,34 @@
 import React from "react";
-import { Text, View, StyleSheet, Platform } from "react-native-web";
+import { Text, View, StyleSheet } from "react-native-web";
+import Head from "next/head";
 import PropTypes from "prop-types";
 
-const backgroundColor = "#fff";
-
-const Waiting = ({ playerName, host, game }) => {
+const Waiting = ({ playerId, host, game }) => {
     if (!host && typeof window !== "undefined") {
         host = window.location.origin;
     }
     return (
         <View style={styles.container}>
-            <Text>{playerName}</Text>
-            <Text>Waiting for opponent</Text>
-            <Text>Invite link : {`${host}/tipsy/game/${game.id}/join`}</Text>
+            <Head>
+                <noscript>
+                    <meta
+                        httpEquiv="refresh"
+                        content={`3; url=/tipsy/game?id=${game.id}&playerId=${playerId}`}
+                    />
+                </noscript>
+            </Head>
+            <Text style={styles.title}>Tipsy</Text>
+            <Text style={styles.text}>Waiting for opponent</Text>
+            <Text style={styles.text}>Invite link :</Text>
+            <Text style={styles.text}>
+                {`${host}/tipsy/game/${game.id}/join`}
+            </Text>
         </View>
     );
 };
 
 Waiting.propTypes = {
-    playerName: PropTypes.string.isRequired,
+    playerId: PropTypes.string.isRequired,
     host: PropTypes.string,
     game: PropTypes.object.isRequired,
 };
@@ -26,11 +36,21 @@ Waiting.propTypes = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor,
         alignItems: "center",
         justifyContent: "center",
-        // To avoid overlapping status bar on android : https://stackoverflow.com/questions/51289587/react-native-how-to-use-safeareaview-for-android-notch-devices/55017347
-        paddingTop: Platform.OS === "android" ? 25 : 0,
+        backgroundColor: "steelblue",
+        fontFamily: "Lobster",
+    },
+    text: {
+        flex: 1,
+        color: "white",
+        fontSize: 30,
+    },
+    title: {
+        fontFamily: "Lobster",
+        fontSize: 90,
+        color: "white",
+        paddingBottom: 50,
     },
 });
 

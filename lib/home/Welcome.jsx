@@ -27,7 +27,7 @@ const Welcome = ({ playerName }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Tipsy</Text>
-            <Text style={styles.textInput}>Welcome {playerName}</Text>
+            <Text style={styles.text}>Welcome {playerName}</Text>
             <AdaptiveButton
                 onPress={handleNewGame}
                 href={`/tipsy/game?playerName=${encodeURIComponent(
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         backgroundColor: "steelblue",
         fontFamily: "Lobster",
     },
-    textInput: {
+    text: {
         color: "white",
         fontSize: 30,
     },
