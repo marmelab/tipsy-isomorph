@@ -7,9 +7,9 @@ const Puck = ({ puck }) => {
     useEffect(() => {
         Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 2000,
+            duration: 500,
         }).start();
-    });
+    }, [puck.position]);
     useEffect(() => {
         return () => {
             Animated.timing(fadeAnim, {
