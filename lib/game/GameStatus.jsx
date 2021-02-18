@@ -26,6 +26,8 @@ GameStatus.propTypes = {
 };
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        paddingTop: 20,
         marginTop: 10,
         marginBottom: 50,
         height: 30,

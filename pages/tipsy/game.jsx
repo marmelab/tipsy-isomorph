@@ -159,7 +159,17 @@ const Game = ({ currentGame, playerId, host }) => {
                     />
                 </noscript>
             </Head>
-            <GameStatus game={game} playerId={playerId}></GameStatus>
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    },
+                ]}
+            >
+                <GameStatus game={game} playerId={playerId}></GameStatus>
+            </View>
             <View style={styles.game}>
                 {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
@@ -203,7 +213,6 @@ const Game = ({ currentGame, playerId, host }) => {
                         ></AdaptiveButton>
                     ) : null}
                 </View>
-
                 {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
                         onPress={() => tilt("east", game.currentPlayer)}
@@ -212,20 +221,42 @@ const Game = ({ currentGame, playerId, host }) => {
                     ></AdaptiveButton>
                 ) : null}
             </View>
-            <PowerUps
-                game={game}
-                playerId={playerId}
-                usePower={usePower}
-            ></PowerUps>
-            {game.remainingTurns == 0 &&
-            (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
-                <AdaptiveButton
-                    onPress={() => replace()}
-                    href={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
-                >
-                    <Text>Replace</Text>
-                </AdaptiveButton>
-            ) : null}
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    },
+                ]}
+            >
+                {game.remainingTurns == 0 &&
+                game.currentPlayer === playerId &&
+                (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
+                    <AdaptiveButton
+                        onPress={() => replace()}
+                        href={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
+                        style="replace"
+                    >
+                        <Text style={styles.replace}>Replace</Text>
+                    </AdaptiveButton>
+                ) : null}
+            </View>
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    },
+                ]}
+            >
+                <PowerUps
+                    game={game}
+                    playerId={playerId}
+                    usePower={usePower}
+                ></PowerUps>
+            </View>
         </View>
     );
 };
@@ -285,6 +316,7 @@ const styles = StyleSheet.create({
     },
     game: {
         flex: 1,
+        paddingTop: 100,
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",
@@ -293,6 +325,15 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontFamily: "Lobster",
         color: "white",
+    },
+    replace: {
+        fontSize: 30,
+        height: 50,
+        color: "steelblue",
+        backgroundColor: "white",
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
     },
 });
 
