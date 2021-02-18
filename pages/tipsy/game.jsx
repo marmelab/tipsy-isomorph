@@ -165,10 +165,8 @@ const Game = ({ currentGame, playerId, host }) => {
                     <AdaptiveButton
                         onPress={() => tilt("west", game.currentPlayer)}
                         href={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerId=${playerId}`}
-                        style={styles.leftArrow}
-                    >
-                        <Text>◄</Text>
-                    </AdaptiveButton>
+                        style="leftArrow"
+                    ></AdaptiveButton>
                 ) : null}
                 <View style={styles.board}>
                     {game.currentPlayer === playerId &&
@@ -176,10 +174,8 @@ const Game = ({ currentGame, playerId, host }) => {
                         <AdaptiveButton
                             onPress={() => tilt("north", game.currentPlayer)}
                             href={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerId=${playerId}`}
-                            style={styles.upArrow}
-                        >
-                            <Text>▲</Text>
-                        </AdaptiveButton>
+                            style="upArrow"
+                        ></AdaptiveButton>
                     ) : null}
                     {boardObstacles.map((row, y) => {
                         return (
@@ -203,10 +199,8 @@ const Game = ({ currentGame, playerId, host }) => {
                         <AdaptiveButton
                             onPress={() => tilt("south", game.currentPlayer)}
                             href={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerId=${playerId}`}
-                            style={styles.downArrow}
-                        >
-                            <Text>▼</Text>
-                        </AdaptiveButton>
+                            style="downArrow"
+                        ></AdaptiveButton>
                     ) : null}
                 </View>
 
@@ -214,10 +208,8 @@ const Game = ({ currentGame, playerId, host }) => {
                     <AdaptiveButton
                         onPress={() => tilt("east", game.currentPlayer)}
                         href={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerId=${playerId}`}
-                        style={styles.rightArrow}
-                    >
-                        <Text>►</Text>
-                    </AdaptiveButton>
+                        style="rightArrow"
+                    ></AdaptiveButton>
                 ) : null}
             </View>
             <PowerUps
@@ -230,7 +222,6 @@ const Game = ({ currentGame, playerId, host }) => {
                 <AdaptiveButton
                     onPress={() => replace()}
                     href={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
-                    style={styles.rightArrow}
                 >
                     <Text>Replace</Text>
                 </AdaptiveButton>
@@ -285,7 +276,6 @@ const styles = StyleSheet.create({
         display: "none",
     },
     row: {
-        height: 36,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -303,26 +293,6 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontFamily: "Lobster",
         color: "white",
-    },
-    upArrow: {
-        height: 30,
-        width: 300,
-        alignItems: "center",
-    },
-    rightArrow: {
-        height: 300,
-        width: 30,
-        justifyContent: "center",
-    },
-    downArrow: {
-        height: 20,
-        width: 300,
-        alignItems: "center",
-    },
-    leftArrow: {
-        height: 300,
-        width: 30,
-        justifyContent: "center",
     },
 });
 
