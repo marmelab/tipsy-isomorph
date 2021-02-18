@@ -15,6 +15,6 @@ services:
             - NODE_ENV=test
     tipsy-symfony:
         build:
-            context: https://github.com/marmelab/tipsy-symfony.git#dockerGitRepo
+            context: https://github.com/marmelab/tipsy-symfony.git
         working_dir: /app
         command: "symfony server:start --port 8080"
