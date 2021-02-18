@@ -1,5 +1,5 @@
 describe("Game", () => {
-    test("renders App component", () => {
+    it("renders App component", () => {
         cy.visit("tipsy/home");
     });
 });
