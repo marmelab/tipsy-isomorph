@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native-web";
 import PropTypes from "prop-types";
 
-const AdaptiveButton = ({ action, noJsFallBack, style = {}, children }) => {
+const AdaptiveButton = ({ onPress, href, style = {}, children }) => {
     const [jsOnlyStyle, setJsOnlyStyle] = useState({ display: "none" });
 
     useEffect(() => {
@@ -11,10 +11,10 @@ const AdaptiveButton = ({ action, noJsFallBack, style = {}, children }) => {
         }
     }, [jsOnlyStyle, setJsOnlyStyle]);
     return (
-        <TouchableOpacity onPress={() => action()}>
+        <TouchableOpacity onPress={onPress}>
             <View style={style}>
                 <noscript>
-                    <a href={noJsFallBack}>{children}</a>
+                    <a href={href}>{children}</a>
                 </noscript>
                 <View style={jsOnlyStyle}>{children}</View>
             </View>
@@ -23,8 +23,8 @@ const AdaptiveButton = ({ action, noJsFallBack, style = {}, children }) => {
 };
 
 AdaptiveButton.propTypes = {
-    action: PropTypes.func.isRequired,
-    noJsFallBack: PropTypes.string.isRequired,
+    onPress: PropTypes.func.isRequired,
+    href: PropTypes.string.isRequired,
     style: PropTypes.object,
     children: PropTypes.node.isRequired,
 };

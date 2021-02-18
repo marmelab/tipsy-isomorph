@@ -28,8 +28,8 @@ const Welcome = ({ playerName }) => {
         <View style={styles.container}>
             <Text>Welcome {playerName}</Text>
             <AdaptiveButton
-                action={handleNewGame}
-                noJsFallBack={`/tipsy/game?playerName=${encodeURIComponent(
+                onPress={handleNewGame}
+                href={`/tipsy/game?playerName=${encodeURIComponent(
                     playerName
                 )}`}
             >
@@ -37,8 +37,8 @@ const Welcome = ({ playerName }) => {
             </AdaptiveButton>
 
             <AdaptiveButton
-                action={() => handleNewGame(true)}
-                noJsFallBack={`/tipsy/game?playerName=${encodeURIComponent(
+                onPress={() => handleNewGame(true)}
+                href={`/tipsy/game?playerName=${encodeURIComponent(
                     playerName
                 )}&quickGame=true`}
             >

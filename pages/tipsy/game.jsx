@@ -2,11 +2,13 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native-web";
 
 import GameStatus from "../../lib/game/GameStatus.jsx";
+import PowerUps from "../../lib/game/PowerUps.jsx";
 import {
     getGame,
     replacePuck,
     tiltGame,
     createGame,
+    usePowerUp,
 } from "../../lib/game/GameApi.js";
 import Cell from "../../lib/game/Cell.jsx";
 import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
@@ -37,6 +39,7 @@ const Game = ({ currentGame, playerId, host }) => {
     const [error, setError] = useState();
     const [tiltState, setTiltState] = useState("pending");
     const [replaceState, setReplaceState] = useState();
+    const [usePowerState, setUsePowerState] = useState();
     const [game, setGame] = useState(currentGame);
 
     useEffect(() => {
@@ -56,6 +59,26 @@ const Game = ({ currentGame, playerId, host }) => {
             setGame(game);
         });
     }, [game, setGame]);
+
+    const usePower = useCallback(
+        (powerUp) => {
+            if (usePowerState === "loading") {
+                return;
+            }
+            setUsePowerState("loading");
+            usePowerUp(game.id, playerId, powerUp)
+                .catch((error) => {
+                    setError(error);
+                })
+                .then(() => {
+                    updateGame();
+                })
+                .finally(() => {
+                    setReplaceState("pending");
+                });
+        },
+        [usePowerState, setUsePowerState]
+    );
 
     const replace = useCallback(() => {
         if (replaceState === "loading") {
@@ -136,12 +159,12 @@ const Game = ({ currentGame, playerId, host }) => {
                     />
                 </noscript>
             </Head>
-            <GameStatus game={game}></GameStatus>
+            <GameStatus game={game} playerId={playerId}></GameStatus>
             <View style={styles.game}>
                 {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
-                        action={() => tilt("west", game.currentPlayer)}
-                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerId=${playerId}`}
+                        onPress={() => tilt("west", game.currentPlayer)}
+                        href={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerId=${playerId}`}
                         style={styles.leftArrow}
                     >
                         <Text>◄</Text>
@@ -151,8 +174,8 @@ const Game = ({ currentGame, playerId, host }) => {
                     {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
-                            action={() => tilt("north", game.currentPlayer)}
-                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerId=${playerId}`}
+                            onPress={() => tilt("north", game.currentPlayer)}
+                            href={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerId=${playerId}`}
                             style={styles.upArrow}
                         >
                             <Text>▲</Text>
@@ -178,8 +201,8 @@ const Game = ({ currentGame, playerId, host }) => {
                     {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
-                            action={() => tilt("south", game.currentPlayer)}
-                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerId=${playerId}`}
+                            onPress={() => tilt("south", game.currentPlayer)}
+                            href={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerId=${playerId}`}
                             style={styles.downArrow}
                         >
                             <Text>▼</Text>
@@ -189,19 +212,24 @@ const Game = ({ currentGame, playerId, host }) => {
 
                 {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
-                        action={() => tilt("east", game.currentPlayer)}
-                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerId=${playerId}`}
+                        onPress={() => tilt("east", game.currentPlayer)}
+                        href={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerId=${playerId}`}
                         style={styles.rightArrow}
                     >
                         <Text>►</Text>
                     </AdaptiveButton>
                 ) : null}
             </View>
+            <PowerUps
+                game={game}
+                playerId={playerId}
+                usePower={usePower}
+            ></PowerUps>
             {game.remainingTurns == 0 &&
             (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
                 <AdaptiveButton
-                    action={() => replace()}
-                    noJsFallBack={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
+                    onPress={() => replace()}
+                    href={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
                     style={styles.rightArrow}
                 >
                     <Text>Replace</Text>
