@@ -1,13 +1,8 @@
 import React from "react";
 import { View, StyleSheet } from "react-native-web";
-import Puck from "./Puck.jsx";
 import PropTypes from "prop-types";
-const Cell = ({ game, x, y, cellType }) => {
-    return (
-        <View key={"cell" + x + y} style={styles[cellType]}>
-            <Puck x={x} y={y} pucks={game.pucks}></Puck>
-        </View>
-    );
+const Cell = ({ x, y, cellType }) => {
+    return <View key={"cell" + x + y} style={styles[cellType]} />;
 };
 
 Cell.propTypes = {

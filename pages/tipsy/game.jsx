@@ -11,6 +11,7 @@ import {
     usePowerUp,
 } from "../../lib/game/GameApi.js";
 import Cell from "../../lib/game/Cell.jsx";
+import Puck from "../../lib/game/Puck.jsx";
 import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
 import isGameFull from "../../lib/shared/tools";
 import Waiting from "../../lib/game/Waiting.jsx";
@@ -187,23 +188,34 @@ const Game = ({ currentGame, playerId, host }) => {
                             style="upArrow"
                         ></AdaptiveButton>
                     ) : null}
-                    {boardObstacles.map((row, y) => {
-                        return (
-                            <View key={"row" + y} style={styles.row}>
-                                {row.map((cellType, x) => {
-                                    return (
-                                        <Cell
-                                            key={`cell-${x}-${y}`}
-                                            x={x}
-                                            y={y}
-                                            game={game}
-                                            cellType={cellType}
-                                        />
-                                    );
-                                })}
-                            </View>
-                        );
-                    })}
+
+                    <View style={{ width: 300 }}>
+                        {game.pucks.map((puck) => {
+                            return (
+                                <Puck
+                                    key={`${puck.position.x}-${puck.position.y}`}
+                                    puck={puck}
+                                ></Puck>
+                            );
+                        })}
+                        {boardObstacles.map((row, y) => {
+                            return (
+                                <View key={"row" + y} style={styles.row}>
+                                    {row.map((cellType, x) => {
+                                        return (
+                                            <Cell
+                                                key={`cell-${x}-${y}`}
+                                                x={x}
+                                                y={y}
+                                                game={game}
+                                                cellType={cellType}
+                                            />
+                                        );
+                                    })}
+                                </View>
+                            );
+                        })}
+                    </View>
                     {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
