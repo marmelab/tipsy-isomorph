@@ -1,0 +1,18 @@
+version: "3.3"
+
+services:
+    tipsy-isomorph:
+        image: node:alpine
+        volumes:
+            - ${PWD}/:/tipsy
+        command: yarn dev
+        working_dir: /tipsy
+        depends_on:
+            - tipsy-symfony
+        environment:
+            - NODE_ENV=test
+    tipsy-symfony:
+        build:
+            context: https://github.com/marmelab/tipsy-symfony.git#dockerGitRepo
+        working_dir: /app
+        command: "symfony server:start --port 8080"

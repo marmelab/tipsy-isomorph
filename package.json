@@ -17,6 +17,7 @@
     },
     "devDependencies": {
         "@testing-library/cypress": "^7.0.3",
+        "@testing-library/react": "^11.2.5",
         "babel-eslint": "^10.1.0",
         "babel-plugin-react-native-web": "^0.13.14",
         "cypress": "^6.4.0",
