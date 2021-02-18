@@ -26,14 +26,15 @@ const Welcome = ({ playerName }) => {
     }
     return (
         <View style={styles.container}>
-            <Text>Welcome {playerName}</Text>
+            <Text style={styles.title}>Tipsy</Text>
+            <Text style={styles.textInput}>Welcome {playerName}</Text>
             <AdaptiveButton
                 onPress={handleNewGame}
                 href={`/tipsy/game?playerName=${encodeURIComponent(
                     playerName
                 )}`}
             >
-                <Text style={styles.goButton}>New game</Text>
+                <Text style={styles.goButton}>Play with friends</Text>
             </AdaptiveButton>
 
             <AdaptiveButton
@@ -61,27 +62,30 @@ const styles = StyleSheet.create({
         fontFamily: "Lobster",
     },
     textInput: {
-        height: 50,
-        width: 200,
-        margin: 50,
-        paddingLeft: 20,
-        borderColor: "white",
         color: "white",
-        borderWidth: 2,
-        borderRadius: 30,
+        fontSize: 30,
     },
     goButton: {
+        flex: 1,
+        flexGrow: 1,
         fontFamily: "Lobster",
         fontSize: 30,
-        height: 50,
-        width: 170,
-        margin: 50,
-        paddingLeft: 20,
+        marginTop: 10,
+        paddingTop: 4,
+        paddingBottom: 4,
+        paddingLeft: 10,
+        paddingRight: 10,
         color: "steelblue",
         backgroundColor: "white",
         borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
+    },
+    title: {
+        fontFamily: "Lobster",
+        fontSize: 90,
+        color: "white",
+        paddingBottom: 50,
     },
 });
 export default Welcome;
