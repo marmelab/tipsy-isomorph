@@ -1,6 +1,5 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native-web";
-import PowerUps from "./PowerUps.jsx";
 import PropTypes from "prop-types";
 
 const GameStatus = ({ game, playerId }) => {
@@ -11,9 +10,12 @@ const GameStatus = ({ game, playerId }) => {
     return (
         <View style={styles.container}>
             <Text style={[styles.text, styles[currentPlayer().color]]}>
-                {`${currentPlayer().name} turn!`}
+                {`It's ${
+                    currentPlayer().id === playerId
+                        ? "your"
+                        : currentPlayer().name
+                } turn!`}
             </Text>
-            {currentPlayer().id === playerId ? <Text>It is you!</Text> : null}
             <Text style={[styles.text, styles[currentPlayer().color]]}>
                 {game.remainingTurns}
             </Text>
