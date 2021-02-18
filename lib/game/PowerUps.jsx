@@ -1,8 +1,9 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native-web";
+import AdaptiveButton from "../shared/AdaptiveButton.jsx";
 import PropTypes from "prop-types";
 
-const PowerUps = ({ game, playerId }) => {
+const PowerUps = ({ game, playerId, usePower }) => {
     const currentPlayer = game.players.find((player) => player.current);
     if (currentPlayer.id === playerId) {
         return (
@@ -10,9 +11,15 @@ const PowerUps = ({ game, playerId }) => {
                 {Object.entries(currentPlayer.powerUps).map(
                     ([powerUp, number]) => {
                         return (
-                            <Text key={powerUp}>
-                                {powerUp} - {number}
-                            </Text>
+                            <AdaptiveButton
+                                key={powerUp}
+                                onPress={() => usePower(powerUp)}
+                                href={`/tipsy/game?id=${game.id}&action=powerUp&powerUp=${powerUp}&playerId=${playerId}`}
+                            >
+                                <Text>
+                                    {powerUp} - {number}
+                                </Text>
+                            </AdaptiveButton>
                         );
                     }
                 )}
@@ -25,6 +32,7 @@ const PowerUps = ({ game, playerId }) => {
 PowerUps.propTypes = {
     game: PropTypes.object.isRequired,
     playerId: PropTypes.string.isRequired,
+    usePower: PropTypes.func.isRequired,
 };
 
 export default PowerUps;

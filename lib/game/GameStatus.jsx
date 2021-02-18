@@ -14,7 +14,6 @@ const GameStatus = ({ game, playerId }) => {
                 {`${currentPlayer().name} turn!`}
             </Text>
             {currentPlayer().id === playerId ? <Text>It is you!</Text> : null}
-            <PowerUps game={game} playerId={playerId}></PowerUps>
             <Text style={[styles.text, styles[currentPlayer().color]]}>
                 {game.remainingTurns}
             </Text>
