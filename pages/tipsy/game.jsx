@@ -2,7 +2,12 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native-web";
 
 import GameStatus from "../../lib/game/GameStatus.jsx";
-import { getGame, replace, tilt, createGame } from "../../lib/game/GameApi.js";
+import {
+    getGame,
+    replacePuck,
+    tiltGame,
+    createGame,
+} from "../../lib/game/GameApi.js";
 import Cell from "../../lib/game/Cell.jsx";
 import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
 import isGameFull from "../../lib/shared/tools";
@@ -30,14 +35,10 @@ const boardObstacles = [
 
 const Game = ({ currentGame, playerId, host }) => {
     const [error, setError] = useState();
-    const [tiltState, setTiltState] = useState();
+    const [tiltState, setTiltState] = useState("pending");
     const [replaceState, setReplaceState] = useState();
     const [game, setGame] = useState(currentGame);
-    const updateGame = () => {
-        getGame(game.id).then((game) => {
-            setGame(game);
-        });
-    };
+
     useEffect(() => {
         const updateGameInterval = setInterval(function () {
             if (game.currentPlayer !== playerId || !isGameFull(game)) {
@@ -50,12 +51,18 @@ const Game = ({ currentGame, playerId, host }) => {
         };
     }, [game.id]);
 
+    const updateGame = useCallback(() => {
+        getGame(game.id).then((game) => {
+            setGame(game);
+        });
+    }, [game, setGame]);
+
     const replace = useCallback(() => {
         if (replaceState === "loading") {
             return;
         }
         setReplaceState("loading");
-        replace(game.id)
+        replacePuck(game.id)
             .catch((error) => {
                 setError(error);
             })
@@ -73,7 +80,7 @@ const Game = ({ currentGame, playerId, host }) => {
                 return;
             }
             setTiltState("loading");
-            tilt(direction, playerId, game.id)
+            tiltGame(direction, playerId, game.id)
                 .catch((error) => {
                     setError(error);
                 })
@@ -137,7 +144,7 @@ const Game = ({ currentGame, playerId, host }) => {
                         noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerId=${playerId}`}
                         style={styles.leftArrow}
                     >
-                        ◄
+                        <Text>◄</Text>
                     </AdaptiveButton>
                 ) : null}
                 <View style={styles.board}>
@@ -148,7 +155,7 @@ const Game = ({ currentGame, playerId, host }) => {
                             noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerId=${playerId}`}
                             style={styles.upArrow}
                         >
-                            ▲
+                            <Text>▲</Text>
                         </AdaptiveButton>
                     ) : null}
                     {boardObstacles.map((row, y) => {
@@ -175,7 +182,7 @@ const Game = ({ currentGame, playerId, host }) => {
                             noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerId=${playerId}`}
                             style={styles.downArrow}
                         >
-                            ▼
+                            <Text>▼</Text>
                         </AdaptiveButton>
                     ) : null}
                 </View>
@@ -186,7 +193,7 @@ const Game = ({ currentGame, playerId, host }) => {
                         noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerId=${playerId}`}
                         style={styles.rightArrow}
                     >
-                        ►
+                        <Text>►</Text>
                     </AdaptiveButton>
                 ) : null}
             </View>
@@ -197,7 +204,7 @@ const Game = ({ currentGame, playerId, host }) => {
                     noJsFallBack={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
                     style={styles.rightArrow}
                 >
-                    Replace
+                    <Text>Replace</Text>
                 </AdaptiveButton>
             ) : null}
         </View>
@@ -216,10 +223,10 @@ export async function getServerSideProps({ query, req }) {
     switch (action) {
         case "tilt":
             game = await getGame(id);
-            game = await tilt(direction, game.currentPlayer, game.id);
+            game = await tiltGame(direction, game.currentPlayer, game.id);
             break;
         case "replace":
-            game = await replace(id);
+            game = await replacePuck(id);
             break;
         default: {
             if (id) {

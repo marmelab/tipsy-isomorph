@@ -22,6 +22,12 @@ test:
 	@echo "Launch the tests"
 	docker-compose run --rm tipsy-isomorph yarn test
 
+e2e:
+	@echo "Launch e2e"
+	docker-compose -f docker-compose-e2e.yml up --force-recreate -d
+	docker-compose -f docker-compose-e2e.yml exec -T tipsy-isomorph yarn run cypress install
+	docker-compose -f docker-compose-e2e.yml exec -T tipsy-isomorph yarn run cypress run
+	docker-compose -f docker-compose-e2e.yml down
 
 build:
 	@echo "Build the app"

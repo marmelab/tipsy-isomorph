@@ -1,0 +1,20 @@
+version: "3.3"
+
+services:
+    tipsy-isomorph:
+        image: cypress/base
+        volumes:
+            - ./:/tipsy
+        command: yarn dev
+        working_dir: /tipsy
+        ports:
+            - 3000:3000
+        depends_on:
+            - tipsy-symfony
+        environment:
+            - NODE_ENV=test
+    tipsy-symfony:
+        build:
+            context: https://github.com/marmelab/tipsy-symfony.git
+        working_dir: /app
+        command: "symfony server:start --port 8080"

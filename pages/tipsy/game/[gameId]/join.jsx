@@ -6,14 +6,14 @@ import { useRouter } from "next/router";
 
 const Join = ({ gameId }) => {
     const router = useRouter();
-    const joinGame = async (playerName) => {
+    const join = async (playerName) => {
         const [, playerId] = await joinGame(playerName, gameId);
         router.push(`/tipsy/game?id=${gameId}&playerId=${playerId}`);
     };
 
     return (
         <PlayerInputName
-            onPress={joinGame}
+            onPress={join}
             onPressFallBack={`/tipsy/game/${gameId}/join`}
         ></PlayerInputName>
     );

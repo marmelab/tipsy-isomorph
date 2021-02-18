@@ -1,0 +1,138 @@
+{
+    "id": 9,
+    "players": [
+        {
+            "id": "123123123",
+            "color": "red",
+            "name": "Bobby",
+            "current": true,
+            "powerUps": {
+                "beer": 1,
+                "whisky": 1
+            }
+        },
+        {
+            "id": "",
+            "color": "blue",
+            "name": "",
+            "current": false,
+            "powerUps": {
+                "beer": 0,
+                "whisky": 0
+            }
+        }
+    ],
+    "scores": {
+        "blue": 0,
+        "red": 0
+    },
+    "currentPlayer": "123123123",
+    "remainingTurns": 2,
+    "pucks": [
+        {
+            "color": "blue",
+            "position": {
+                "x": 1,
+                "y": 2
+            },
+            "flipped": false
+        },
+        {
+            "color": "blue",
+            "position": {
+                "x": 1,
+                "y": 4
+            },
+            "flipped": false
+        },
+        {
+            "color": "red",
+            "position": {
+                "x": 2,
+                "y": 1
+            },
+            "flipped": false
+        },
+        {
+            "color": "red",
+            "position": {
+                "x": 2,
+                "y": 3
+            },
+            "flipped": false
+        },
+        {
+            "color": "red",
+            "position": {
+                "x": 2,
+                "y": 5
+            },
+            "flipped": false
+        },
+        {
+            "color": "blue",
+            "position": {
+                "x": 3,
+                "y": 2
+            },
+            "flipped": false
+        },
+        {
+            "color": "black",
+            "position": {
+                "x": 3,
+                "y": 3
+            },
+            "flipped": false
+        },
+        {
+            "color": "blue",
+            "position": {
+                "x": 3,
+                "y": 4
+            },
+            "flipped": false
+        },
+        {
+            "color": "red",
+            "position": {
+                "x": 4,
+                "y": 1
+            },
+            "flipped": false
+        },
+        {
+            "color": "red",
+            "position": {
+                "x": 4,
+                "y": 3
+            },
+            "flipped": false
+        },
+        {
+            "color": "red",
+            "position": {
+                "x": 4,
+                "y": 5
+            },
+            "flipped": false
+        },
+        {
+            "color": "blue",
+            "position": {
+                "x": 5,
+                "y": 2
+            },
+            "flipped": false
+        },
+        {
+            "color": "blue",
+            "position": {
+                "x": 5,
+                "y": 4
+            },
+            "flipped": false
+        }
+    ],
+    "fallenPucks": [0, 0]
+}

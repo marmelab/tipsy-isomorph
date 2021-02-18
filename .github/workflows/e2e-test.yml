@@ -1,4 +1,4 @@
-name: Unit tests
+name: E2E tests
 
 on: [push]
 
@@ -11,6 +11,6 @@ jobs:
             - name: Build Docker image
               run: |
                   make install
-            - name: Unit tests
+            - name: e2e tests
               run: |
-                  make test
+                  make e2e
