@@ -1,13 +1,13 @@
 import React from "react";
 import PlayerInputName from "../../../../lib/shared/PlayerNameInput.jsx";
-import gameApi from "../../../../lib/game/GameApi.js";
+import { joinGame } from "../../../../lib/game/GameApi.js";
 import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 
 const Join = ({ gameId }) => {
     const router = useRouter();
     const joinGame = async (playerName) => {
-        const [, playerId] = await gameApi.joinGame(playerName, gameId);
+        const [, playerId] = await joinGame(playerName, gameId);
         router.push(`/tipsy/game?id=${gameId}&playerId=${playerId}`);
     };
 
@@ -21,7 +21,7 @@ const Join = ({ gameId }) => {
 export async function getServerSideProps({ query, res }) {
     const { gameId, playerName } = query;
     if (playerName) {
-        const [, playerId] = await gameApi.joinGame(playerName, gameId);
+        const [, playerId] = await joinGame(playerName, gameId);
         res.setHeader(
             "Location",
             `/tipsy/game?id=${gameId}&playerId=${playerId}`

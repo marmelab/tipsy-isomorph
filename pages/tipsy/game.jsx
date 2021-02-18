@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native-web";
 
 import GameStatus from "../../lib/game/GameStatus.jsx";
-import gameApi from "../../lib/game/GameApi.js";
+import { getGame, replace, tilt, createGame } from "../../lib/game/GameApi.js";
 import Cell from "../../lib/game/Cell.jsx";
 import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
 import isGameFull from "../../lib/shared/tools";
@@ -34,7 +34,7 @@ const Game = ({ currentGame, playerId, host }) => {
     const [replaceState, setReplaceState] = useState();
     const [game, setGame] = useState(currentGame);
     const updateGame = () => {
-        gameApi.getGame(game.id).then((game) => {
+        getGame(game.id).then((game) => {
             setGame(game);
         });
     };
@@ -55,8 +55,7 @@ const Game = ({ currentGame, playerId, host }) => {
             return;
         }
         setReplaceState("loading");
-        gameApi
-            .replace(game.id)
+        replace(game.id)
             .catch((error) => {
                 setError(error);
             })
@@ -74,8 +73,7 @@ const Game = ({ currentGame, playerId, host }) => {
                 return;
             }
             setTiltState("loading");
-            gameApi
-                .tilt(direction, playerId, game.id)
+            tilt(direction, playerId, game.id)
                 .catch((error) => {
                     setError(error);
                 })
@@ -217,18 +215,18 @@ export async function getServerSideProps({ query, req }) {
     let game;
     switch (action) {
         case "tilt":
-            game = await gameApi.getGame(id);
-            game = await gameApi.tilt(direction, game.currentPlayer, game.id);
+            game = await getGame(id);
+            game = await tilt(direction, game.currentPlayer, game.id);
             break;
         case "replace":
-            game = await gameApi.replace(id);
+            game = await replace(id);
             break;
         default: {
             if (id) {
-                game = await gameApi.getGame(id);
+                game = await getGame(id);
                 break;
             }
-            const [newGame, newPlayerId] = await gameApi.newGame(
+            const [newGame, newPlayerId] = await createGame(
                 playerName ? playerName : "Anonymous",
                 quickGame
             );
