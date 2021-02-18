@@ -11,7 +11,7 @@ const AdaptiveButton = ({ onPress, href, style = {}, children }) => {
         }
     }, [jsOnlyStyle, setJsOnlyStyle]);
     return (
-        <TouchableOpacity onPress={() => onPress()}>
+        <TouchableOpacity onPress={onPress}>
             <View style={style}>
                 <noscript>
                     <a href={href}>{children}</a>
