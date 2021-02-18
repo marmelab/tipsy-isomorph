@@ -24,8 +24,9 @@ test:
 
 e2e:
 	@echo "Launch e2e"
-	docker-compose -f docker-compose-e2e.yml up -d
-	docker-compose -f docker-compose-e2e.yml exec tipsy-isomorph yarn test
+	docker-compose -f docker-compose-e2e.yml up --force-recreate -d
+	docker-compose -f docker-compose-e2e.yml exec tipsy-isomorph yarn run cypress install
+	docker-compose -f docker-compose-e2e.yml exec tipsy-isomorph yarn run cypress run
 	docker-compose -f docker-compose-e2e.yml down
 
 build:
