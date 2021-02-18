@@ -2,13 +2,13 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native-web";
 
 import GameStatus from "../../lib/game/GameStatus.jsx";
-import gameApi from "../../lib/game/GameApi.js";
-import { useRouter } from "next/router";
+import { getGame, replace, tilt, createGame } from "../../lib/game/GameApi.js";
 import Cell from "../../lib/game/Cell.jsx";
-import AdaptiveButton from "../../lib/game/AdaptiveButton.jsx";
+import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
 import isGameFull from "../../lib/shared/tools";
 import Waiting from "../../lib/game/Waiting.jsx";
 import PropTypes from "prop-types";
+import Head from "next/head";
 
 const boardObstacles = [
     ["topleft", "exit", "top", "obstacle", "top", "top", "topright"],
@@ -28,22 +28,22 @@ const boardObstacles = [
     ],
 ];
 
-const Game = ({ currentGame, playerName, host }) => {
+const Game = ({ currentGame, playerId, host }) => {
     const [error, setError] = useState();
     const [tiltState, setTiltState] = useState();
     const [replaceState, setReplaceState] = useState();
     const [game, setGame] = useState(currentGame);
     const updateGame = () => {
-        gameApi.getGame(game.id).then((game) => {
+        getGame(game.id).then((game) => {
             setGame(game);
         });
     };
     useEffect(() => {
         const updateGameInterval = setInterval(function () {
-            if (game.currentPlayer !== playerName || !isGameFull(game)) {
+            if (game.currentPlayer !== playerId || !isGameFull(game)) {
                 updateGame();
             }
-        }, 1000);
+        }, 2000);
 
         return () => {
             clearInterval(updateGameInterval);
@@ -55,8 +55,7 @@ const Game = ({ currentGame, playerName, host }) => {
             return;
         }
         setReplaceState("loading");
-        gameApi
-            .replace(game.id)
+        replace(game.id)
             .catch((error) => {
                 setError(error);
             })
@@ -69,13 +68,12 @@ const Game = ({ currentGame, playerName, host }) => {
     }, [replaceState, setReplaceState, game.id, error, setError, setGame]);
 
     const tilt = useCallback(
-        (direction, playerName) => {
+        (direction, playerId) => {
             if (tiltState === "loading") {
                 return;
             }
             setTiltState("loading");
-            gameApi
-                .tilt(direction, playerName, game.id)
+            tilt(direction, playerId, game.id)
                 .catch((error) => {
                     setError(error);
                 })
@@ -97,7 +95,19 @@ const Game = ({ currentGame, playerName, host }) => {
         );
     }
     if (!isGameFull(game)) {
-        return <Waiting game={game}></Waiting>;
+        return (
+            <div>
+                <Head>
+                    <noscript>
+                        <meta
+                            httpEquiv="refresh"
+                            content={`3; url=/tipsy/game?id=${game.id}&playerId=${playerId}`}
+                        />
+                    </noscript>
+                </Head>
+                <Waiting game={game} host={host}></Waiting>
+            </div>
+        );
     }
 
     return (
@@ -111,24 +121,31 @@ const Game = ({ currentGame, playerName, host }) => {
                 },
             ]}
         >
+            <Head>
+                <noscript>
+                    <meta
+                        httpEquiv="refresh"
+                        content={`3; url=/tipsy/game?id=${game.id}&playerId=${playerId}`}
+                    />
+                </noscript>
+            </Head>
             <GameStatus game={game}></GameStatus>
             <View style={styles.game}>
-                {game.currentPlayer === playerName &&
-                game.remainingTurns > 0 ? (
+                {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
                         action={() => tilt("west", game.currentPlayer)}
-                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west`}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerId=${playerId}`}
                         style={styles.leftArrow}
                     >
                         ◄
                     </AdaptiveButton>
                 ) : null}
                 <View style={styles.board}>
-                    {game.currentPlayer === playerName &&
+                    {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
                             action={() => tilt("north", game.currentPlayer)}
-                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north`}
+                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerId=${playerId}`}
                             style={styles.upArrow}
                         >
                             ▲
@@ -151,11 +168,11 @@ const Game = ({ currentGame, playerName, host }) => {
                             </View>
                         );
                     })}
-                    {game.currentPlayer === playerName &&
+                    {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
                             action={() => tilt("south", game.currentPlayer)}
-                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south`}
+                            noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerId=${playerId}`}
                             style={styles.downArrow}
                         >
                             ▼
@@ -163,11 +180,10 @@ const Game = ({ currentGame, playerName, host }) => {
                     ) : null}
                 </View>
 
-                {game.currentPlayer === playerName &&
-                game.remainingTurns > 0 ? (
+                {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
                         action={() => tilt("east", game.currentPlayer)}
-                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east`}
+                        noJsFallBack={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerId=${playerId}`}
                         style={styles.rightArrow}
                     >
                         ►
@@ -178,7 +194,7 @@ const Game = ({ currentGame, playerName, host }) => {
             (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
                 <AdaptiveButton
                     action={() => replace()}
-                    noJsFallBack={`/tipsy/game?id=${game.id}&action=replace`}
+                    noJsFallBack={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
                     style={styles.rightArrow}
                 >
                     Replace
@@ -190,39 +206,40 @@ const Game = ({ currentGame, playerName, host }) => {
 
 Game.propTypes = {
     currentGame: PropTypes.object,
-    playerName: PropTypes.string.isRequired,
+    playerId: PropTypes.string.isRequired,
     host: PropTypes.string,
 };
 
-export async function getServerSideProps({ query, res, req }) {
-    const { id, action, direction, playerName } = query;
+export async function getServerSideProps({ query, req }) {
+    let { id, action, direction, playerName, playerId, quickGame } = query;
     let game;
     switch (action) {
         case "tilt":
-            game = await gameApi.getGame(id);
-            game = await gameApi.tilt(direction, game.currentPlayer, game.id);
+            game = await getGame(id);
+            game = await tilt(direction, game.currentPlayer, game.id);
             break;
         case "replace":
-            game = await gameApi.replace(id);
+            game = await replace(id);
             break;
-        default:
+        default: {
             if (id) {
-                game = await gameApi.getGame(id);
-            } else {
-                game = await gameApi.newGame(playerName);
-                res.writeHead(302, {
-                    Location: `/tipsy/game?id=${game.id}&playerName=${playerName}`,
-                });
-                res.end();
-                return { props: {} };
+                game = await getGame(id);
+                break;
             }
+            const [newGame, newPlayerId] = await createGame(
+                playerName ? playerName : "Anonymous",
+                quickGame
+            );
+            game = newGame;
+            playerId = newPlayerId;
             break;
+        }
     }
 
     return {
         props: {
             currentGame: game,
-            playerName,
+            playerId,
             host: `http://${req.headers.host}`,
         },
     };

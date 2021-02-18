@@ -11,8 +11,8 @@ export default function App() {
 }
 
 export async function getServerSideProps({ res }) {
-    res.writeHead(302, { Location: `/tipsy/home` });
-    res.end();
+    res.setHeader("Location", `/tipsy/home`);
+    res.statusCode = 302;
     return { props: {} };
 }
 

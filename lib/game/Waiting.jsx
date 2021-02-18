@@ -18,7 +18,7 @@ const Waiting = ({ playerName, host, game }) => {
 };
 
 Waiting.propTypes = {
-    playerName: PropTypes.string,
+    playerName: PropTypes.string.isRequired,
     host: PropTypes.string,
     game: PropTypes.object.isRequired,
 };
