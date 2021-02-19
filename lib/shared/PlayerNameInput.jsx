@@ -21,6 +21,7 @@ const PlayerInputName = ({ onPress, onPressFallBack }) => {
                 selectionColor="white"
                 onChangeText={updatePlayerName}
                 style={[styles.textInput, jsOnlyStyle]}
+                onSubmitEditing={() => onPress(playerName)}
             ></TextInput>
             <Pressable
                 title="Go"
