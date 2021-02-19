@@ -42,6 +42,7 @@ const Game = ({ currentGame, playerId, host }) => {
     const [replaceState, setReplaceState] = useState();
     const [usePowerState, setUsePowerState] = useState();
     const [game, setGame] = useState(currentGame);
+    const [winner, setWinner] = useState();
 
     useEffect(() => {
         const updateGameInterval = setInterval(function () {
@@ -57,9 +58,19 @@ const Game = ({ currentGame, playerId, host }) => {
 
     const updateGame = useCallback(() => {
         getGame(game.id).then((game) => {
+            const blackPuck = game.pucks.find((puck) => puck.color === "black");
+            if (
+                blackPuck.position.x < 0 ||
+                blackPuck.position.x > 6 ||
+                blackPuck.position.y < 0 ||
+                blackPuck.position.y > 6
+            ) {
+                setWinner(game.currentPlayer);
+                return;
+            }
             setGame(game);
         });
-    }, [game, setGame]);
+    }, [game, setGame, setWinner]);
 
     const usePower = useCallback(
         (powerUp) => {
@@ -127,6 +138,26 @@ const Game = ({ currentGame, playerId, host }) => {
     }
     if (!isGameFull(game)) {
         return <Waiting game={game} host={host} playerId={playerId}></Waiting>;
+    }
+    if (winner) {
+        return (
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                    },
+                ]}
+            >
+                <Text>
+                    Player{" "}
+                    {game.players.find((player) => player.id === winner).name}{" "}
+                    win
+                </Text>
+            </View>
+        );
     }
 
     return (
