@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native-web";
+import { View, Text } from "react-native-web";
 import Emoji from "./Emoji.jsx";
 import AdaptiveButton from "../shared/AdaptiveButton.jsx";
 import PropTypes from "prop-types";
@@ -24,7 +24,26 @@ const PowerUps = ({ game, playerId, usePower }) => {
                                 <Emoji
                                     label={powerUp}
                                     symbol={powerUpsEmoji[powerUp]}
+                                    disabled={number == 0}
                                 />
+                                {number > 0 ? (
+                                    <Text
+                                        style={{
+                                            flex: 1,
+                                            borderRadius: 20,
+                                            position: "absolute",
+                                            top: 20,
+                                            left: 15,
+                                            color: "steelblue",
+                                            backgroundColor: "white",
+                                            padding: 5,
+                                            fontDecoration: "bold",
+                                            fontSize: 17,
+                                        }}
+                                    >
+                                        {number}
+                                    </Text>
+                                ) : null}
                             </AdaptiveButton>
                         );
                     }
