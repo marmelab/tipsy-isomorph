@@ -52,7 +52,7 @@ const PowerUps = ({ game, playerId, usePower }) => {
                 <AdaptiveButton onPress={() => setModalVisible(!modalVisible)}>
                     <Emoji label="PowerUps Info" symbol="❓" />
                 </AdaptiveButton>
-                <View style={[!modalVisible ? {} : { display: "none" }]}>
+                <View style={[modalVisible ? {} : { display: "none" }]}>
                     <Emoji label="PowerUps Info" symbol="🍺" /> add 1 turn
                     <Emoji label="PowerUps Info" symbol="🥃" /> switch colors
                 </View>
