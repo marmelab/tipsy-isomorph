@@ -149,6 +149,7 @@ const Game = ({ currentGame, playerId, host }) => {
                 </noscript>
             </Head>
             <View
+                accessibilityLabel="Game status"
                 style={[
                     {
                         flex: 1,
@@ -164,16 +165,16 @@ const Game = ({ currentGame, playerId, host }) => {
                     <AdaptiveButton
                         onPress={() => tilt("west", game.currentPlayer)}
                         href={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerId=${playerId}`}
-                        style="leftArrow"
+                        styleName="leftArrow"
                     ></AdaptiveButton>
                 ) : null}
-                <View style={styles.board}>
+                <View style={styles.board} accessibilityLabel="Board">
                     {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
                             onPress={() => tilt("north", game.currentPlayer)}
                             href={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerId=${playerId}`}
-                            style="upArrow"
+                            styleName="upArrow"
                         ></AdaptiveButton>
                     ) : null}
 
@@ -209,7 +210,7 @@ const Game = ({ currentGame, playerId, host }) => {
                         <AdaptiveButton
                             onPress={() => tilt("south", game.currentPlayer)}
                             href={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerId=${playerId}`}
-                            style="downArrow"
+                            styleName="downArrow"
                         ></AdaptiveButton>
                     ) : null}
                 </View>
@@ -217,7 +218,7 @@ const Game = ({ currentGame, playerId, host }) => {
                     <AdaptiveButton
                         onPress={() => tilt("east", game.currentPlayer)}
                         href={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerId=${playerId}`}
-                        style="rightArrow"
+                        styleName="rightArrow"
                     ></AdaptiveButton>
                 ) : null}
             </View>
@@ -236,7 +237,7 @@ const Game = ({ currentGame, playerId, host }) => {
                     <AdaptiveButton
                         onPress={() => replace()}
                         href={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
-                        style="replace"
+                        styleName="replace"
                     >
                         <Text style={styles.replace}>Replace</Text>
                     </AdaptiveButton>
