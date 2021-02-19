@@ -11,6 +11,7 @@ import {
     usePowerUp,
 } from "../../lib/game/GameApi.js";
 import Cell from "../../lib/game/Cell.jsx";
+import Puck from "../../lib/game/Puck.jsx";
 import AdaptiveButton from "../../lib/shared/AdaptiveButton.jsx";
 import isGameFull from "../../lib/shared/tools";
 import Waiting from "../../lib/game/Waiting.jsx";
@@ -125,19 +126,7 @@ const Game = ({ currentGame, playerId, host }) => {
         );
     }
     if (!isGameFull(game)) {
-        return (
-            <div>
-                <Head>
-                    <noscript>
-                        <meta
-                            httpEquiv="refresh"
-                            content={`3; url=/tipsy/game?id=${game.id}&playerId=${playerId}`}
-                        />
-                    </noscript>
-                </Head>
-                <Waiting game={game} host={host}></Waiting>
-            </div>
-        );
+        return <Waiting game={game} host={host} playerId={playerId}></Waiting>;
     }
 
     return (
@@ -159,16 +148,24 @@ const Game = ({ currentGame, playerId, host }) => {
                     />
                 </noscript>
             </Head>
-            <GameStatus game={game} playerId={playerId}></GameStatus>
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    },
+                ]}
+            >
+                <GameStatus game={game} playerId={playerId}></GameStatus>
+            </View>
             <View style={styles.game}>
                 {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
                         onPress={() => tilt("west", game.currentPlayer)}
                         href={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerId=${playerId}`}
-                        style={styles.leftArrow}
-                    >
-                        <Text>◄</Text>
-                    </AdaptiveButton>
+                        style="leftArrow"
+                    ></AdaptiveButton>
                 ) : null}
                 <View style={styles.board}>
                     {game.currentPlayer === playerId &&
@@ -176,73 +173,92 @@ const Game = ({ currentGame, playerId, host }) => {
                         <AdaptiveButton
                             onPress={() => tilt("north", game.currentPlayer)}
                             href={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerId=${playerId}`}
-                            style={styles.upArrow}
-                        >
-                            <Text>▲</Text>
-                        </AdaptiveButton>
+                            style="upArrow"
+                        ></AdaptiveButton>
                     ) : null}
-                    {boardObstacles.map((row, y) => {
-                        return (
-                            <View key={"row" + y} style={styles.row}>
-                                {row.map((cellType, x) => {
-                                    return (
-                                        <Cell
-                                            key={`cell-${x}-${y}`}
-                                            x={x}
-                                            y={y}
-                                            game={game}
-                                            cellType={cellType}
-                                        />
-                                    );
-                                })}
-                            </View>
-                        );
-                    })}
+
+                    <View style={{ width: 300 }}>
+                        {game.pucks.map((puck) => {
+                            return (
+                                <Puck
+                                    key={`${puck.position.x}-${puck.position.y}`}
+                                    puck={puck}
+                                ></Puck>
+                            );
+                        })}
+                        {boardObstacles.map((row, y) => {
+                            return (
+                                <View key={"row" + y} style={styles.row}>
+                                    {row.map((cellType, x) => {
+                                        return (
+                                            <Cell
+                                                key={`cell-${x}-${y}`}
+                                                x={x}
+                                                y={y}
+                                                game={game}
+                                                cellType={cellType}
+                                            />
+                                        );
+                                    })}
+                                </View>
+                            );
+                        })}
+                    </View>
                     {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
                             onPress={() => tilt("south", game.currentPlayer)}
                             href={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerId=${playerId}`}
-                            style={styles.downArrow}
-                        >
-                            <Text>▼</Text>
-                        </AdaptiveButton>
+                            style="downArrow"
+                        ></AdaptiveButton>
                     ) : null}
                 </View>
-
                 {game.currentPlayer === playerId && game.remainingTurns > 0 ? (
                     <AdaptiveButton
                         onPress={() => tilt("east", game.currentPlayer)}
                         href={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerId=${playerId}`}
-                        style={styles.rightArrow}
+                        style="rightArrow"
+                    ></AdaptiveButton>
+                ) : null}
+            </View>
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    },
+                ]}
+            >
+                {game.remainingTurns == 0 &&
+                game.currentPlayer === playerId &&
+                (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
+                    <AdaptiveButton
+                        onPress={() => replace()}
+                        href={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
+                        style="replace"
                     >
-                        <Text>►</Text>
+                        <Text style={styles.replace}>Replace</Text>
                     </AdaptiveButton>
                 ) : null}
             </View>
-            <PowerUps
-                game={game}
-                playerId={playerId}
-                usePower={usePower}
-            ></PowerUps>
-            {game.remainingTurns == 0 &&
-            (game.fallenPucks[0] > 0 || game.fallenPucks[1] > 0) ? (
-                <AdaptiveButton
-                    onPress={() => replace()}
-                    href={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
-                    style={styles.rightArrow}
-                >
-                    <Text>Replace</Text>
-                </AdaptiveButton>
-            ) : null}
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    },
+                ]}
+            >
+                <PowerUps
+                    game={game}
+                    playerId={playerId}
+                    usePower={usePower}
+                ></PowerUps>
+            </View>
         </View>
     );
-};
-
-Game.propTypes = {
-    currentGame: PropTypes.object,
-    playerId: PropTypes.string.isRequired,
-    host: PropTypes.string,
 };
 
 export async function getServerSideProps({ query, req }) {
@@ -285,7 +301,6 @@ const styles = StyleSheet.create({
         display: "none",
     },
     row: {
-        height: 36,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -295,6 +310,7 @@ const styles = StyleSheet.create({
     },
     game: {
         flex: 1,
+        paddingTop: 120,
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",
@@ -304,24 +320,17 @@ const styles = StyleSheet.create({
         fontFamily: "Lobster",
         color: "white",
     },
-    upArrow: {
-        height: 30,
-        width: 300,
+    replace: {
+        flex: 1,
+        marginTop: 50,
+        padding: 10,
+        fontSize: 20,
+        textAlign: "center",
+        height: 50,
+        color: "white",
+        backgroundColor: "steelblue",
+        borderRadius: 30,
         alignItems: "center",
-    },
-    rightArrow: {
-        height: 300,
-        width: 30,
-        justifyContent: "center",
-    },
-    downArrow: {
-        height: 20,
-        width: 300,
-        alignItems: "center",
-    },
-    leftArrow: {
-        height: 300,
-        width: 30,
         justifyContent: "center",
     },
 });

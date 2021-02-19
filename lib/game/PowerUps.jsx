@@ -1,13 +1,18 @@
 import React from "react";
-import { Text, View, StyleSheet } from "react-native-web";
+import { View } from "react-native-web";
+import Emoji from "./Emoji.jsx";
 import AdaptiveButton from "../shared/AdaptiveButton.jsx";
 import PropTypes from "prop-types";
 
+const powerUpsEmoji = {
+    beer: "🍺",
+    whisky: "🥃",
+};
 const PowerUps = ({ game, playerId, usePower }) => {
     const currentPlayer = game.players.find((player) => player.current);
     if (currentPlayer.id === playerId) {
         return (
-            <View>
+            <View style={{ flex: 1, flexDirection: "row", marginTop: 40 }}>
                 {Object.entries(currentPlayer.powerUps).map(
                     ([powerUp, number]) => {
                         return (
@@ -16,9 +21,10 @@ const PowerUps = ({ game, playerId, usePower }) => {
                                 onPress={() => usePower(powerUp)}
                                 href={`/tipsy/game?id=${game.id}&action=powerUp&powerUp=${powerUp}&playerId=${playerId}`}
                             >
-                                <Text>
-                                    {powerUp} - {number}
-                                </Text>
+                                <Emoji
+                                    label={powerUp}
+                                    symbol={powerUpsEmoji[powerUp]}
+                                />
                             </AdaptiveButton>
                         );
                     }

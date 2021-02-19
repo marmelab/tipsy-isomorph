@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native-web";
 import PropTypes from "prop-types";
 
-const AdaptiveButton = ({ onPress, href, style = {}, children }) => {
+const AdaptiveButton = ({ onPress, href, style, children }) => {
     const [jsOnlyStyle, setJsOnlyStyle] = useState({ display: "none" });
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const AdaptiveButton = ({ onPress, href, style = {}, children }) => {
 AdaptiveButton.propTypes = {
     onPress: PropTypes.func.isRequired,
     href: PropTypes.string.isRequired,
-    style: PropTypes.object,
+    style: PropTypes.string,
     children: PropTypes.node.isRequired,
 };
 export default AdaptiveButton;

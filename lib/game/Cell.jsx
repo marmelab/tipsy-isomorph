@@ -1,13 +1,8 @@
 import React from "react";
 import { View, StyleSheet } from "react-native-web";
-import Puck from "./Puck.jsx";
 import PropTypes from "prop-types";
-const Cell = ({ game, x, y, cellType }) => {
-    return (
-        <View key={"cell" + x + y} style={styles[cellType]}>
-            <Puck x={x} y={y} pucks={game.pucks}></Puck>
-        </View>
-    );
+const Cell = ({ x, y, cellType }) => {
+    return <View key={"cell" + x + y} style={styles[cellType]} />;
 };
 
 Cell.propTypes = {
@@ -26,7 +21,7 @@ const styles = StyleSheet.create({
     left: {
         width: 36,
         height: 36,
-        borderLeftWidth: 2,
+        borderLeftWidth: 3,
         borderColor: "grey",
         alignItems: "center",
         alignContent: "center",
@@ -34,8 +29,8 @@ const styles = StyleSheet.create({
     topleft: {
         width: 36,
         height: 36,
-        borderTopWidth: 2,
-        borderLeftWidth: 2,
+        borderTopWidth: 3,
+        borderLeftWidth: 3,
         borderColor: "grey",
         alignItems: "center",
         alignContent: "center",
@@ -43,8 +38,8 @@ const styles = StyleSheet.create({
     topright: {
         width: 36,
         height: 36,
-        borderTopWidth: 2,
-        borderRightWidth: 2,
+        borderTopWidth: 3,
+        borderRightWidth: 3,
         borderColor: "grey",
         alignItems: "center",
         alignContent: "center",
@@ -52,7 +47,7 @@ const styles = StyleSheet.create({
     right: {
         width: 36,
         height: 36,
-        borderRightWidth: 2,
+        borderRightWidth: 3,
         borderColor: "grey",
         alignItems: "center",
         alignContent: "center",
@@ -60,7 +55,7 @@ const styles = StyleSheet.create({
     bottom: {
         width: 36,
         height: 36,
-        borderBottomWidth: 2,
+        borderBottomWidth: 3,
         borderColor: "grey",
         alignItems: "center",
         alignContent: "center",
@@ -68,8 +63,8 @@ const styles = StyleSheet.create({
     bottomright: {
         width: 36,
         height: 36,
-        borderRightWidth: 2,
-        borderBottomWidth: 2,
+        borderRightWidth: 3,
+        borderBottomWidth: 3,
         borderColor: "grey",
         alignItems: "center",
         alignContent: "center",
@@ -77,8 +72,8 @@ const styles = StyleSheet.create({
     bottomleft: {
         width: 36,
         height: 36,
-        borderBottomWidth: 2,
-        borderLeftWidth: 2,
+        borderBottomWidth: 3,
+        borderLeftWidth: 3,
         borderColor: "grey",
         alignItems: "center",
         alignContent: "center",
@@ -86,7 +81,7 @@ const styles = StyleSheet.create({
     top: {
         width: 36,
         height: 36,
-        borderTopWidth: 2,
+        borderTopWidth: 3,
         borderColor: "grey",
         alignItems: "center",
         alignContent: "center",
