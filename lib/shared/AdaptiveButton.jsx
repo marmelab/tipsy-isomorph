@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native-web";
 import PropTypes from "prop-types";
-import { globalStyle } from "../shared/style";
 
 const AdaptiveButton = ({ onPress, href, style, children }) => {
     const [jsOnlyStyle, setJsOnlyStyle] = useState({ display: "none" });
@@ -12,8 +11,8 @@ const AdaptiveButton = ({ onPress, href, style, children }) => {
         }
     }, [jsOnlyStyle, setJsOnlyStyle]);
     return (
-        <TouchableOpacity onPress={() => onPress()}>
-            <View style={globalStyle[style]}>
+        <TouchableOpacity onPress={onPress}>
+            <View style={style}>
                 <noscript>
                     <a href={href}>{children}</a>
                 </noscript>
