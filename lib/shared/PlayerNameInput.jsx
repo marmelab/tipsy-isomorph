@@ -14,13 +14,16 @@ const PlayerInputName = ({ onPress, onPressFallBack }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Tipsy</Text>
+
             <TextInput
-                label="playerName"
+                label="Player Name"
                 placeholder="Player name"
                 placeholderTextColor="white"
                 selectionColor="white"
                 onChangeText={updatePlayerName}
                 style={[styles.textInput, jsOnlyStyle]}
+                onSubmitEditing={() => onPress(playerName)}
+                name="playerName"
             ></TextInput>
             <Pressable
                 title="Go"

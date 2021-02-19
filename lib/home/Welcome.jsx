@@ -8,7 +8,7 @@ import GridLoader from "react-spinners/GridLoader";
 const Welcome = ({ playerName }) => {
     const [creatingGame, setCreatingGame] = useState(false);
     const router = useRouter();
-    const handleNewGame = (quickGame) => {
+    const handleNewGame = (quickGame = false) => {
         setCreatingGame(true);
         router.push(
             `/tipsy/game?playerName=${encodeURIComponent(playerName)}${
@@ -29,7 +29,7 @@ const Welcome = ({ playerName }) => {
             <Text style={styles.title}>Tipsy</Text>
             <Text style={styles.text}>Welcome {playerName}</Text>
             <AdaptiveButton
-                onPress={handleNewGame}
+                onPress={() => handleNewGame(false)}
                 href={`/tipsy/game?playerName=${encodeURIComponent(
                     playerName
                 )}`}

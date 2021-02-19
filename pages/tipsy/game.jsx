@@ -42,6 +42,7 @@ const Game = ({ currentGame, playerId, host }) => {
     const [replaceState, setReplaceState] = useState();
     const [usePowerState, setUsePowerState] = useState();
     const [game, setGame] = useState(currentGame);
+    const [winner, setWinner] = useState();
 
     useEffect(() => {
         const updateGameInterval = setInterval(function () {
@@ -57,9 +58,41 @@ const Game = ({ currentGame, playerId, host }) => {
 
     const updateGame = useCallback(() => {
         getGame(game.id).then((game) => {
+            const blackPuck = game.pucks.find((puck) => puck.color === "black");
+            if (
+                blackPuck.position.x < 0 ||
+                blackPuck.position.x > 6 ||
+                blackPuck.position.y < 0 ||
+                blackPuck.position.y > 6
+            ) {
+                setWinner(game.currentPlayer);
+                return;
+            }
+            const currentPlayer = game.players.find(
+                (player) => player.id === game.currentPlayer
+            );
+            const opponent = game.players.find(
+                (player) => player.id != game.currentPlayer
+            );
+            const currentPlayerFlippedPuck = game.pucks.filter(
+                (puck) =>
+                    puck.color === currentPlayer.color && puck.flipped === true
+            );
+            const opponentFlippedPuck = game.pucks.filter(
+                (puck) => puck.color === opponent.color && puck.flipped === true
+            );
+            if (opponentFlippedPuck.length == 6) {
+                setWinner(opponent.id);
+                return;
+            }
+            if (currentPlayerFlippedPuck.length == 6) {
+                setWinner(currentPlayer.id);
+                return;
+            }
+
             setGame(game);
         });
-    }, [game, setGame]);
+    }, [game, setGame, setWinner]);
 
     const usePower = useCallback(
         (powerUp) => {
@@ -128,6 +161,33 @@ const Game = ({ currentGame, playerId, host }) => {
     if (!isGameFull(game)) {
         return <Waiting game={game} host={host} playerId={playerId}></Waiting>;
     }
+    if (winner) {
+        return (
+            <View
+                style={[
+                    {
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "steelblue",
+                        fontFamily: "Lobster",
+                    },
+                ]}
+            >
+                <Text
+                    style={{
+                        flex: 1,
+                        color: "white",
+                        fontSize: 30,
+                    }}
+                >
+                    Player{" "}
+                    {game.players.find((player) => player.id === winner).name}{" "}
+                    win
+                </Text>
+            </View>
+        );
+    }
 
     return (
         <View
@@ -149,6 +209,7 @@ const Game = ({ currentGame, playerId, host }) => {
                 </noscript>
             </Head>
             <View
+                accessibilityLabel="Game status"
                 style={[
                     {
                         flex: 1,
@@ -164,16 +225,16 @@ const Game = ({ currentGame, playerId, host }) => {
                     <AdaptiveButton
                         onPress={() => tilt("west", game.currentPlayer)}
                         href={`/tipsy/game?id=${game.id}&action=tilt&direction=west&playerId=${playerId}`}
-                        style="leftArrow"
+                        styleName="leftArrow"
                     ></AdaptiveButton>
                 ) : null}
-                <View style={styles.board}>
+                <View style={styles.board} accessibilityLabel="Board">
                     {game.currentPlayer === playerId &&
                     game.remainingTurns > 0 ? (
                         <AdaptiveButton
                             onPress={() => tilt("north", game.currentPlayer)}
                             href={`/tipsy/game?id=${game.id}&action=tilt&direction=north&playerId=${playerId}`}
-                            style="upArrow"
+                            styleName="upArrow"
                         ></AdaptiveButton>
                     ) : null}
 
@@ -209,7 +270,7 @@ const Game = ({ currentGame, playerId, host }) => {
                         <AdaptiveButton
                             onPress={() => tilt("south", game.currentPlayer)}
                             href={`/tipsy/game?id=${game.id}&action=tilt&direction=south&playerId=${playerId}`}
-                            style="downArrow"
+                            styleName="downArrow"
                         ></AdaptiveButton>
                     ) : null}
                 </View>
@@ -217,7 +278,7 @@ const Game = ({ currentGame, playerId, host }) => {
                     <AdaptiveButton
                         onPress={() => tilt("east", game.currentPlayer)}
                         href={`/tipsy/game?id=${game.id}&action=tilt&direction=east&playerId=${playerId}`}
-                        style="rightArrow"
+                        styleName="rightArrow"
                     ></AdaptiveButton>
                 ) : null}
             </View>
@@ -236,7 +297,7 @@ const Game = ({ currentGame, playerId, host }) => {
                     <AdaptiveButton
                         onPress={() => replace()}
                         href={`/tipsy/game?id=${game.id}&action=replace&playerId=${playerId}`}
-                        style="replace"
+                        styleName="replace"
                     >
                         <Text style={styles.replace}>Replace</Text>
                     </AdaptiveButton>
@@ -259,6 +320,12 @@ const Game = ({ currentGame, playerId, host }) => {
             </View>
         </View>
     );
+};
+
+Game.propTypes = {
+    currentGame: PropTypes.object.isRequired,
+    playerId: PropTypes.string.isRequired,
+    host: PropTypes.string,
 };
 
 export async function getServerSideProps({ query, req }) {
@@ -334,5 +401,4 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 });
-
 export default Game;

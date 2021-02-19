@@ -20,7 +20,7 @@ const Waiting = ({ playerId, host, game }) => {
             <Text style={styles.title}>Tipsy</Text>
             <Text style={styles.text}>Waiting for opponent</Text>
             <Text style={styles.text}>Invite link :</Text>
-            <Text style={styles.text}>
+            <Text style={styles.text} accessibilityLabel="Join link">
                 {`${host}/tipsy/game/${game.id}/join`}
             </Text>
         </View>
