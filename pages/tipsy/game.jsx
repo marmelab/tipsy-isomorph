@@ -68,6 +68,28 @@ const Game = ({ currentGame, playerId, host }) => {
                 setWinner(game.currentPlayer);
                 return;
             }
+            const currentPlayer = game.players.find(
+                (player) => player.id === game.currentPlayer
+            );
+            const opponent = game.players.find(
+                (player) => player.id != game.currentPlayer
+            );
+            const currentPlayerFlippedPuck = game.pucks.filter(
+                (puck) =>
+                    puck.color === currentPlayer.color && puck.flipped === true
+            );
+            const opponentFlippedPuck = game.pucks.filter(
+                (puck) => puck.color === opponent.color && puck.flipped === true
+            );
+            if (opponentFlippedPuck.length == 6) {
+                setWinner(opponent.id);
+                return;
+            }
+            if (currentPlayerFlippedPuck.length == 6) {
+                setWinner(currentPlayer.id);
+                return;
+            }
+
             setGame(game);
         });
     }, [game, setGame, setWinner]);
@@ -147,11 +169,18 @@ const Game = ({ currentGame, playerId, host }) => {
                         flex: 1,
                         alignItems: "center",
                         justifyContent: "center",
-                        flexDirection: "column",
+                        backgroundColor: "steelblue",
+                        fontFamily: "Lobster",
                     },
                 ]}
             >
-                <Text>
+                <Text
+                    style={{
+                        flex: 1,
+                        color: "white",
+                        fontSize: 30,
+                    }}
+                >
                     Player{" "}
                     {game.players.find((player) => player.id === winner).name}{" "}
                     win
@@ -293,6 +322,12 @@ const Game = ({ currentGame, playerId, host }) => {
     );
 };
 
+Game.propTypes = {
+    currentGame: PropTypes.object.isRequired,
+    playerId: PropTypes.string.isRequired,
+    host: PropTypes.string,
+};
+
 export async function getServerSideProps({ query, req }) {
     let { id, action, direction, playerName, playerId, quickGame } = query;
     let game;
@@ -366,5 +401,4 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 });
-
 export default Game;
