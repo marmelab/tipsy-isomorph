@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text } from "react-native-web";
+import React, { useState } from "react";
+import { View, Text, Modal, Pressable } from "react-native-web";
 import Emoji from "./Emoji.jsx";
 import AdaptiveButton from "../shared/AdaptiveButton.jsx";
 import PropTypes from "prop-types";
@@ -10,6 +10,7 @@ const powerUpsEmoji = {
 };
 const PowerUps = ({ game, playerId, usePower }) => {
     const currentPlayer = game.players.find((player) => player.current);
+    const [modalVisible, setModalVisible] = useState(false);
     if (currentPlayer.id === playerId) {
         return (
             <View style={{ flex: 1, flexDirection: "row", marginTop: 40 }}>
@@ -48,6 +49,13 @@ const PowerUps = ({ game, playerId, usePower }) => {
                         );
                     }
                 )}
+                <AdaptiveButton onPress={() => setModalVisible(!modalVisible)}>
+                    <Emoji label="PowerUps Info" symbol="❓" />
+                </AdaptiveButton>
+                <View style={[!modalVisible ? {} : { display: "none" }]}>
+                    <Emoji label="PowerUps Info" symbol="🍺" /> add 1 turn
+                    <Emoji label="PowerUps Info" symbol="🥃" /> switch colors
+                </View>
             </View>
         );
     }
